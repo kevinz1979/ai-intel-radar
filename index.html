@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 社群情報雷達 | X & Threads 雙軌巡邏儀控表</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* 滾動條美化 */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
+    .drawer-slide {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-3 sm:p-6 min-h-screen">
+
+  <div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- 頂部導航與狀態列 -->
+    <header class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-xl">
+            ⚡
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-xl font-bold tracking-tight text-[var(--foreground)]">AI 社群第一手情報雷達</h1>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>巡邏中
+              </span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)] mt-0.5">X (Twitter) & Threads (脆) · 定時輪詢與雙核解構代理人</p>
+          </div>
+        </div>
+
+        <!-- 頂部核心指標 -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="bg-[var(--surface-container-low)] px-3 py-2 rounded-lg border border-[var(--border)]">
+            <div class="text-[var(--muted-foreground)]">監控 KOL 種子</div>
+            <div class="text-base font-bold text-[var(--foreground)] mt-0.5" id="stat-kols">68 <span class="text-xs font-normal text-emerald-400">+3 本週</span></div>
+          </div>
+          <div class="bg-[var(--surface-container-low)] px-3 py-2 rounded-lg border border-[var(--border)]">
+            <div class="text-[var(--muted-foreground)]">今日掃描訊號</div>
+            <div class="text-base font-bold text-[var(--foreground)] mt-0.5" id="stat-scanned">1,420 <span class="text-xs font-normal text-[var(--muted-foreground)]">則</span></div>
+          </div>
+          <div class="bg-[var(--surface-container-low)] px-3 py-2 rounded-lg border border-[var(--border)]">
+            <div class="text-[var(--muted-foreground)]">精煉情報卡片</div>
+            <div class="text-base font-bold text-[var(--foreground)] mt-0.5 text-indigo-400" id="stat-intel">18 <span class="text-xs font-normal text-[var(--muted-foreground)]">份</span></div>
+          </div>
+          <div class="bg-[var(--surface-container-low)] px-3 py-2 rounded-lg border border-[var(--border)]">
+            <div class="text-[var(--muted-foreground)]">情報時間差機會</div>
+            <div class="text-base font-bold text-amber-400 mt-0.5" id="stat-gaps">4 <span class="text-xs font-normal text-[var(--muted-foreground)]">個議題</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分頁切換 (Tabs) -->
+      <div class="flex items-center gap-2 mt-5 pt-4 border-t border-[var(--border)]">
+        <button id="tab-feed-btn" onclick="switchTab('feed')" class="px-4 py-2 rounded-lg text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm transition">
+          🔥 即時情報流 (Feed)
+        </button>
+        <button id="tab-arbitrage-btn" onclick="switchTab('arbitrage')" class="px-4 py-2 rounded-lg text-xs font-semibold bg-[var(--surface-container-low)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)] transition">
+          ⏳ 時差預警雷達 (X vs Threads)
+        </button>
+        <button id="tab-roster-btn" onclick="switchTab('roster')" class="px-4 py-2 rounded-lg text-xs font-semibold bg-[var(--surface-container-low)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)] transition">
+          👥 巡邏種子庫 (KOL Roster)
+        </button>
+      </div>
+    </header>
+
+    <!-- 主視圖 1: 即時情報流 (Feed) -->
+    <main id="view-feed" class="space-y-4">
+      <!-- 篩選列 -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[var(--card)] p-3 rounded-xl border border-[var(--border)]">
+        <!-- 搜尋 -->
+        <div class="relative flex-1">
+          <input type="text" id="searchInput" oninput="handleSearch()" placeholder="搜尋模型、作者或技術關鍵字 (例: Claude, DeepSeek, Cursor)..." 
+                 class="w-full bg-[var(--surface-container-low)] text-xs text-[var(--foreground)] pl-8 pr-3 py-2 rounded-lg border border-[var(--border)] focus:outline-none focus:border-indigo-500 placeholder-[var(--muted-foreground)]">
+          <span class="absolute left-2.5 top-2.5 text-[var(--muted-foreground)] text-xs">🔍</span>
+        </div>
+
+        <!-- 平台篩選 -->
+        <div class="flex items-center gap-1.5 overflow-x-auto">
+          <span class="text-xs text-[var(--muted-foreground)] whitespace-nowrap mr-1">平台:</span>
+          <button onclick="setPlatformFilter('all')" id="btn-plat-all" class="px-2.5 py-1 text-xs rounded-md bg-indigo-500/20 text-indigo-400 font-medium border border-indigo-500/30">全部</button>
+          <button onclick="setPlatformFilter('X')" id="btn-plat-x" class="px-2.5 py-1 text-xs rounded-md bg-[var(--surface-container-low)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)]">X (Twitter)</button>
+          <button onclick="setPlatformFilter('Threads')" id="btn-plat-threads" class="px-2.5 py-1 text-xs rounded-md bg-[var(--surface-container-low)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)]">Threads (脆)</button>
+        </div>
+
+        <!-- 優先級篩選 -->
+        <div class="flex items-center gap-1.5 overflow-x-auto">
+          <span class="text-xs text-[var(--muted-foreground)] whitespace-nowrap mr-1">級別:</span>
+          <button onclick="setUrgencyFilter('all')" id="btn-urg-all" class="px-2.5 py-1 text-xs rounded-md bg-indigo-500/20 text-indigo-400 font-medium border border-indigo-500/30">全部</button>
+          <button onclick="setUrgencyFilter('P0')" id="btn-urg-p0" class="px-2.5 py-1 text-xs rounded-md bg-[var(--surface-container-low)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)]">P0 重大發布</button>
+          <button onclick="setUrgencyFilter('P1')" id="btn-urg-p1" class="px-2.5 py-1 text-xs rounded-md bg-[var(--surface-container-low)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)]">P1 實用工具</button>
+          <button onclick="setUrgencyFilter('P2')" id="btn-urg-p2" class="px-2.5 py-1 text-xs rounded-md bg-[var(--surface-container-low)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)]">P2 觀點爭議</button>
+        </div>
+      </div>
+
+      <!-- 情報卡片清單 (動態渲染) -->
+      <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- 由 JavaScript 動態注入 -->
+      </div>
+    </main>
+
+    <!-- 主視圖 2: 時差預警雷達 (Arbitrage) -->
+    <section id="view-arbitrage" class="hidden space-y-4">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-base font-bold text-[var(--foreground)]">🌍 全球原爆點 vs 繁中在地時間差 (Arbitrage Monitor)</h2>
+            <p class="text-xs text-[var(--muted-foreground)]">捕捉 X 已引爆、但 Threads 尚未普遍討論的利基議題，供您搶先布局或轉譯發布。</p>
+          </div>
+          <span class="px-2 py-1 rounded bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">⚡ 4 個高時差題材</span>
+        </div>
+
+        <div id="arbitrage-container" class="space-y-3">
+          <!-- 由 JS 渲染 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 主視圖 3: 巡邏種子庫 (Roster) -->
+    <section id="view-roster" class="hidden space-y-4">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
+          <div>
+            <h2 class="text-base font-bold text-[var(--foreground)]">🎯 KOL 巡邏種子管理清單 (50~100 帳號)</h2>
+            <p class="text-xs text-[var(--muted-foreground)]">代理人每隔 15~30 分鐘自動對以下白名單進行增量掃描，避開全局抓取風控。</p>
+          </div>
+          <button onclick="openAddSeedModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm hover:opacity-90 transition">
+            + 新增追蹤種子
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+                <th class="py-2.5 px-3">平台</th>
+                <th class="py-2.5 px-3">帳號 / 名稱</th>
+                <th class="py-2.5 px-3">角色標籤</th>
+                <th class="py-2.5 px-3">上次巡邏</th>
+                <th class="py-2.5 px-3">今日產出情報</th>
+                <th class="py-2.5 px-3">狀態</th>
+                <th class="py-2.5 px-3 text-right">操作</th>
+              </tr>
+            </thead>
+            <tbody id="roster-table-body" class="divide-y divide-[var(--border)]">
+              <!-- 由 JS 渲染 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 層層下鑽抽屜 (Deep-Dive Drawer & Backdrop) -->
+  <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 hidden transition-opacity duration-200"></div>
+
+  <div id="detail-drawer" class="fixed top-0 right-0 h-full w-full max-w-xl bg-[var(--card)] border-l border-[var(--border)] z-50 shadow-2xl p-6 overflow-y-auto transform translate-x-full drawer-slide">
+    <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-5">
+      <div class="flex items-center gap-2" id="drawer-header-badges">
+        <!-- 動態徽章 -->
+      </div>
+      <button onclick="closeDrawer()" class="p-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-container-low)] transition text-sm">
+        ✕
+      </button>
+    </div>
+
+    <!-- 抽屜內容 -->
+    <div id="drawer-content" class="space-y-6">
+      <!-- 動態載入詳細解構 -->
+    </div>
+  </div>
+
+  <script>
+    // 模擬情報數據庫
+    const INTEL_DATA = [
+  {
+    "id": 23,
+    "raw_post_id": 29,
+    "title": "【社群熱議】Every so often I love to be reminded of the biggest devtools...",
+    "platform": "X",
+    "author": "@swyx",
+    "author_role": "swyx",
+    "urgency": "P1",
+    "timestamp_str": "剛剛",
+    "likes": 4664,
+    "summary": "作者分享關於：Every so often I love to be reminded of the biggest devtools bizdev fail of all time https://t.co/qEYYeWrdCV https://t....",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"延伸連結\", \"url\": \"https://t.co/qEYYeWrdCV\", \"type\": \"link\"}, {\"name\": \"延伸連結\", \"url\": \"https://t.co/AAZquBJS2I\", \"type\": \"link\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:58.162697",
+    "links": [
+      {
+        "name": "延伸連結",
+        "url": "https://t.co/qEYYeWrdCV",
+        "type": "link"
+      },
+      {
+        "name": "延伸連結",
+        "url": "https://t.co/AAZquBJS2I",
+        "type": "link"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 22,
+    "raw_post_id": 27,
+    "title": "【社群熱議】ChatGPT’s current killer app isn’t search, therapy, doing ma...",
+    "platform": "X",
+    "author": "@swyx",
+    "author_role": "swyx",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 5283,
+    "summary": "作者分享關於：ChatGPT’s current killer app isn’t search, therapy, doing math, controlling browsers, emulating a virtual machine, or an...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"延伸連結\", \"url\": \"https://t.co/wMmaq4EgWZ\", \"type\": \"link\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:58.094737",
+    "links": [
+      {
+        "name": "延伸連結",
+        "url": "https://t.co/wMmaq4EgWZ",
+        "type": "link"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 21,
+    "raw_post_id": 26,
+    "title": "【社群熱議】Incredible how Stephen Wolfram toiled away in relative obscu...",
+    "platform": "X",
+    "author": "@swyx",
+    "author_role": "swyx",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 6282,
+    "summary": "作者分享關於：Incredible how Stephen Wolfram toiled away in relative obscurity for ~15 years, only to wake up one day and find that Wo...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"延伸連結\", \"url\": \"https://t.co/HIJy8zXBT9\", \"type\": \"link\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:58.053964",
+    "links": [
+      {
+        "name": "延伸連結",
+        "url": "https://t.co/HIJy8zXBT9",
+        "type": "link"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 20,
+    "raw_post_id": 25,
+    "title": "【社群熱議】Wow. GitHub CEO @ashtom just announced GitHub Copilot X: ...",
+    "platform": "X",
+    "author": "@swyx",
+    "author_role": "swyx",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 7236,
+    "summary": "作者分享關於：Wow. GitHub CEO @ashtom just announced GitHub Copilot X: - Copilot Chat - \"ChatGPT-like experience in your editor\" pow...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"延伸連結\", \"url\": \"https://t.co/CVgagooOg8\", \"type\": \"link\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:58.006117",
+    "links": [
+      {
+        "name": "延伸連結",
+        "url": "https://t.co/CVgagooOg8",
+        "type": "link"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 19,
+    "raw_post_id": 24,
+    "title": "【社群熱議】ChatGPT casually dropped an APP STORE 🤯...",
+    "platform": "X",
+    "author": "@swyx",
+    "author_role": "swyx",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 7669,
+    "summary": "作者分享關於：ChatGPT casually dropped an APP STORE 🤯 It can now: - browse the web (RIP Bing waitlist, cutoff) - write and run Python...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"延伸連結\", \"url\": \"https://t.co/RmzlnvuX5F\", \"type\": \"link\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:57.965370",
+    "links": [
+      {
+        "name": "延伸連結",
+        "url": "https://t.co/RmzlnvuX5F",
+        "type": "link"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 18,
+    "raw_post_id": 23,
+    "title": "【社群熱議】I saw an AI engineer today...",
+    "platform": "X",
+    "author": "@swyx",
+    "author_role": "swyx",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 8623,
+    "summary": "作者分享關於：I saw an AI engineer today No cursor. No claude 3.5 sonnet. No aider. He just sat there. Coding without running an LLM...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:57.924118",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 17,
+    "raw_post_id": 19,
+    "title": "【社群熱議】Some personal news: I am joining OpenAI (again :)). Like man...",
+    "platform": "X",
+    "author": "@karpathy",
+    "author_role": "Andrej Karpathy",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 25138,
+    "summary": "作者分享關於：Some personal news: I am joining OpenAI (again :)). Like many others both in/out of AI, I am very inspired by the impact...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:57.804444",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 16,
+    "raw_post_id": 18,
+    "title": "【社群熱議】TikTok is scary good. It's digital crack. First time I feel ...",
+    "platform": "X",
+    "author": "@karpathy",
+    "author_role": "Andrej Karpathy",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 24476,
+    "summary": "作者分享關於：TikTok is scary good. It's digital crack. First time I feel attacked by AI in the brain....",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:57.768100",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 15,
+    "raw_post_id": 17,
+    "title": "【社群熱議】I took delivery of a beautiful new shiny HW4 Tesla Model X t...",
+    "platform": "X",
+    "author": "@karpathy",
+    "author_role": "Andrej Karpathy",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 27414,
+    "summary": "作者分享關於：I took delivery of a beautiful new shiny HW4 Tesla Model X today, so I immediately took it out for an FSD test drive, a ...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:57.733182",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 14,
+    "raw_post_id": 16,
+    "title": "【社群熱議】I wrote a quick new post on \"Digital Hygiene\"....",
+    "platform": "X",
+    "author": "@karpathy",
+    "author_role": "Andrej Karpathy",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 26544,
+    "summary": "作者分享關於：I wrote a quick new post on \"Digital Hygiene\". Basically there are some no-brainer decisions you can make in your life ...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"延伸連結\", \"url\": \"https://t.co/gRyeVouko5\", \"type\": \"link\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:57.695114",
+    "links": [
+      {
+        "name": "延伸連結",
+        "url": "https://t.co/gRyeVouko5",
+        "type": "link"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 13,
+    "raw_post_id": 15,
+    "title": "【社群熱議】⚡️ Excited to share that I am starting an AI+Education compa...",
+    "platform": "X",
+    "author": "@karpathy",
+    "author_role": "Andrej Karpathy",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 27484,
+    "summary": "作者分享關於：⚡️ Excited to share that I am starting an AI+Education company called Eureka Labs. The announcement: --- We are Eureka...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"延伸連結\", \"url\": \"https://t.co/RHPkqdjB8R\", \"type\": \"link\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:57.655226",
+    "links": [
+      {
+        "name": "延伸連結",
+        "url": "https://t.co/RHPkqdjB8R",
+        "type": "link"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 12,
+    "raw_post_id": 14,
+    "title": "【社群熱議】There's a new kind of coding I call \"vibe coding\", where you...",
+    "platform": "X",
+    "author": "@karpathy",
+    "author_role": "Andrej Karpathy",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 34149,
+    "summary": "作者分享關於：There's a new kind of coding I call \"vibe coding\", where you fully give in to the vibes, embrace exponentials, and forge...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:57.618279",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 11,
+    "raw_post_id": 13,
+    "title": "【社群熱議】Agency &gt; Intelligence...",
+    "platform": "X",
+    "author": "@karpathy",
+    "author_role": "Andrej Karpathy",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 50021,
+    "summary": "作者分享關於：Agency &gt; Intelligence I had this intuitively wrong for decades, I think due to a pervasive cultural veneration of in...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:27:57.584149",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 10,
+    "raw_post_id": 10,
+    "title": "【社群熱議】分享中小企業導入地端 8B 模型的最新成本報表：搭配 vLLM 與量化技術，單張 RTX 4090 即可扛住每日 800...",
+    "platform": "Threads",
+    "author": "@ai_builder_tw",
+    "author_role": "Kenzo 自動化顧問",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 1450,
+    "summary": "作者分享關於：分享中小企業導入地端 8B 模型的最新成本報表：搭配 vLLM 與量化技術，單張 RTX 4090 即可扛住每日 8000 次內部行政審批查詢，反應時間小於 1.2 秒。重點不是衝大模型，是切中特定封閉場景。...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中在地即時共鳴討論。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:22:17.503405",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": false,
+      "gapHours": "0 小時",
+      "threadsStatus": "繁中在地即時共鳴討論。"
+    }
+  },
+  {
+    "id": 9,
+    "raw_post_id": 9,
+    "title": "【社群熱議】今天在團隊內部測試了兩款最新程式碼代理人的重構能力。在模組間依賴解耦上表現驚艷，但當上下文跨越 20 個檔案時，依然需要...",
+    "platform": "Threads",
+    "author": "@ihower",
+    "author_role": "ihower 葉平",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 880,
+    "summary": "作者分享關於：今天在團隊內部測試了兩款最新程式碼代理人的重構能力。在模組間依賴解耦上表現驚艷，但當上下文跨越 20 個檔案時，依然需要人類架構師先給出邊界契約（Contract）。AI 是超級副駕駛，不是放生式自動駕駛。...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中在地即時共鳴討論。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:22:17.462915",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": false,
+      "gapHours": "0 小時",
+      "threadsStatus": "繁中在地即時共鳴討論。"
+    }
+  },
+  {
+    "id": 8,
+    "raw_post_id": 8,
+    "title": "【社群熱議】Hot take: The 'AI Engineer' stack in 2026 is consolidating a...",
+    "platform": "X",
+    "author": "@swyx",
+    "author_role": "Shawn Wang",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 2340,
+    "summary": "作者分享關於：Hot take: The 'AI Engineer' stack in 2026 is consolidating around Prompt Compilers (like DSPy 2.5) rather than manual pr...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:22:17.425130",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 7,
+    "raw_post_id": 7,
+    "title": "【社群熱議】Just tested the new Sparse MoE inference architecture. Multi...",
+    "platform": "X",
+    "author": "@karpathy",
+    "author_role": "Andrej Karpathy",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 5120,
+    "summary": "作者分享關於：Just tested the new Sparse MoE inference architecture. Multi-Head Latent Reasoning reduces KV-cache memory pressure by a...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"延伸連結\", \"url\": \"https://arxiv.org/abs/2603.99999\", \"type\": \"paper\"}, {\"name\": \"延伸連結\", \"url\": \"https://github.com/karpathy/nanoMoE\", \"type\": \"github\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:22:17.385093",
+    "links": [
+      {
+        "name": "延伸連結",
+        "url": "https://arxiv.org/abs/2603.99999",
+        "type": "paper"
+      },
+      {
+        "name": "延伸連結",
+        "url": "https://github.com/karpathy/nanoMoE",
+        "type": "github"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 5,
+    "raw_post_id": 6,
+    "title": "【社群熱議】今天實測了 Framework Desktop 搭配 OCuLink 外接 RTX 5070 Ti 跑本地端 AI 推論...",
+    "platform": "Threads",
+    "author": "@ihower",
+    "author_role": "ihower 葉平",
+    "urgency": "P1",
+    "timestamp_str": "剛剛",
+    "likes": 620,
+    "summary": "作者分享關於：今天實測了 Framework Desktop 搭配 OCuLink 外接 RTX 5070 Ti 跑本地端 AI 推論與 AI 搜尋前沿技術，哪些該做、哪些值得投入、哪些先知道就好。...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中在地即時共鳴討論。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T23:22:01.834860",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": false,
+      "gapHours": "0 小時",
+      "threadsStatus": "繁中在地即時共鳴討論。"
+    }
+  },
+  {
+    "id": 4,
+    "raw_post_id": 4,
+    "title": "【社群熱議】分享中小企業導入地端 8B 模型的最新成本報表：搭配 vLLM 與量化技術，單張 RTX 4090 即可扛住每日 800...",
+    "platform": "Threads",
+    "author": "@ai_builder_tw",
+    "author_role": "Kenzo 自動化顧問",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 1450,
+    "summary": "作者分享關於：分享中小企業導入地端 8B 模型的最新成本報表：搭配 vLLM 與量化技術，單張 RTX 4090 即可扛住每日 8000 次內部行政審批查詢，反應時間小於 1.2 秒。重點不是衝大模型，是切中特定封閉場景。...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中在地即時共鳴討論。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T22:34:48.259504",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": false,
+      "gapHours": "0 小時",
+      "threadsStatus": "繁中在地即時共鳴討論。"
+    }
+  },
+  {
+    "id": 3,
+    "raw_post_id": 3,
+    "title": "【社群熱議】今天在團隊內部測試了兩款最新程式碼代理人的重構能力。在模組間依賴解耦上表現驚艷，但當上下文跨越 20 個檔案時，依然需要...",
+    "platform": "Threads",
+    "author": "@ihower",
+    "author_role": "ihower 葉平",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 880,
+    "summary": "作者分享關於：今天在團隊內部測試了兩款最新程式碼代理人的重構能力。在模組間依賴解耦上表現驚艷，但當上下文跨越 20 個檔案時，依然需要人類架構師先給出邊界契約（Contract）。AI 是超級副駕駛，不是放生式自動駕駛。...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中在地即時共鳴討論。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T22:34:48.225616",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": false,
+      "gapHours": "0 小時",
+      "threadsStatus": "繁中在地即時共鳴討論。"
+    }
+  },
+  {
+    "id": 2,
+    "raw_post_id": 2,
+    "title": "【社群熱議】Hot take: The 'AI Engineer' stack in 2026 is consolidating a...",
+    "platform": "X",
+    "author": "@swyx",
+    "author_role": "Shawn Wang",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 2340,
+    "summary": "作者分享關於：Hot take: The 'AI Engineer' stack in 2026 is consolidating around Prompt Compilers (like DSPy 2.5) rather than manual pr...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"原始貼文\", \"url\": \"#\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T22:34:48.186808",
+    "links": [
+      {
+        "name": "原始貼文",
+        "url": "#",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  },
+  {
+    "id": 1,
+    "raw_post_id": 1,
+    "title": "【社群熱議】Just tested the new Sparse MoE inference architecture. Multi...",
+    "platform": "X",
+    "author": "@karpathy",
+    "author_role": "Andrej Karpathy",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 5120,
+    "summary": "作者分享關於：Just tested the new Sparse MoE inference architecture. Multi-Head Latent Reasoning reduces KV-cache memory pressure by a...",
+    "core_thesis": "探討技術落地架構之效能瓶頸與社群實務最佳實踐。",
+    "links_json": "[{\"name\": \"延伸連結\", \"url\": \"https://arxiv.org/abs/2603.99999\", \"type\": \"paper\"}, {\"name\": \"延伸連結\", \"url\": \"https://github.com/karpathy/nanoMoE\", \"type\": \"github\"}]",
+    "community_views_json": "{\"pro\": \"大幅提升原型探索與日常編碼自動化生產力。\", \"con\": \"需留意邊緣情況下的潛在幻覺與維護負擔。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": true, \"gapHours\": \"4 小時\", \"threadsStatus\": \"X 領先釋出，Threads 繁中圈正逐步跟進中。\"}",
+    "actionable": "建議密切追蹤相關 GitHub 專案或在沙盒環境進行驗證。",
+    "created_at": "2026-10-09T22:34:48.150502",
+    "links": [
+      {
+        "name": "延伸連結",
+        "url": "https://arxiv.org/abs/2603.99999",
+        "type": "paper"
+      },
+      {
+        "name": "延伸連結",
+        "url": "https://github.com/karpathy/nanoMoE",
+        "type": "github"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅提升原型探索與日常編碼自動化生產力。",
+      "con": "需留意邊緣情況下的潛在幻覺與維護負擔。"
+    },
+    "arbitrage": {
+      "hasTimeGap": true,
+      "gapHours": "4 小時",
+      "threadsStatus": "X 領先釋出，Threads 繁中圈正逐步跟進中。"
+    }
+  }
+];
+
+    // KOL 巡邏種子庫數據
+    const ROSTER_DATA = [
+  {
+    "platform": "X",
+    "handle": "@karpathy",
+    "name": "Andrej Karpathy",
+    "role": "Core AI Research & Education",
+    "lastCheck": "2026-10-09 23:27",
+    "count": 12,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@swyx",
+    "name": "Shawn Wang",
+    "role": "AI Engineer & Ecosystem",
+    "lastCheck": "2026-10-09 23:27",
+    "count": 12,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@simonw",
+    "name": "Simon Willison",
+    "role": "Open Source & LLM Security",
+    "lastCheck": "2026-10-09 23:27",
+    "count": 10,
+    "status": "正常"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ihower",
+    "name": "ihower 葉平",
+    "role": "繁中軟體工程 & AI 實踐",
+    "lastCheck": "2026-10-09 23:27",
+    "count": 8,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@sama",
+    "name": "Sam Altman",
+    "role": "Frontier Labs / OpenAI",
+    "lastCheck": "2026-10-09 23:22",
+    "count": 2,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@ylecun",
+    "name": "Yann LeCun",
+    "role": "Meta AI / World Models",
+    "lastCheck": "剛剛",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@DrJimFan",
+    "name": "Jim Fan",
+    "role": "NVIDIA / Embodied AI",
+    "lastCheck": "剛剛",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@alexalbert__",
+    "name": "Alex Albert",
+    "role": "Anthropic DevRel",
+    "lastCheck": "剛剛",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@ggerganov",
+    "name": "Georgi Gerganov",
+    "role": "Local Inference & Optimization",
+    "lastCheck": "剛剛",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@OfficialLoganK",
+    "name": "Logan Kilpatrick",
+    "role": "Google DeepMind / Ecosystem",
+    "lastCheck": "剛剛",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@willh.tw",
+    "name": "Will 保哥",
+    "role": "開發者技術生態",
+    "lastCheck": "剛剛",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ai_builder_tw",
+    "name": "Kenzo 自動化顧問",
+    "role": "地端小模型 & n8n 整合",
+    "lastCheck": "2026-10-09 23:22",
+    "count": 2,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@hwchase17",
+    "name": "Harrison Chase",
+    "role": "LangChain / Agent Frameworks",
+    "lastCheck": "剛剛",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@rohanpaul_ai",
+    "name": "Rohan Paul",
+    "role": "Paper Reading & Implementations",
+    "lastCheck": "剛剛",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@yoheinakajima",
+    "name": "Yohei Nakajima",
+    "role": "Autonomous Agents",
+    "lastCheck": "剛剛",
+    "count": 0,
+    "status": "正常"
+  }
+];
+
+    let currentFilter = { platform: 'all', urgency: 'all', search: '' };
+
+    function renderCards() {
+      const container = document.getElementById("cards-container");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const filtered = (INTEL_DATA || []).filter(item => {
+        if (!item) return false;
+        if (currentFilter.platform !== 'all' && item.platform !== currentFilter.platform) return false;
+        if (currentFilter.urgency !== 'all' && (item.urgency || '').toUpperCase() !== currentFilter.urgency.toUpperCase()) return false;
+        if (currentFilter.search) {
+          const q = currentFilter.search.toLowerCase();
+          const title = (item.title || '').toLowerCase();
+          const author = (item.author || '').toLowerCase();
+          const thesis = (item.coreThesis || item.core_thesis || '').toLowerCase();
+          const summary = (item.summary || '').toLowerCase();
+          if (!title.includes(q) && !author.includes(q) && !thesis.includes(q) && !summary.includes(q)) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center text-[var(--muted-foreground)]">
+            <div class="text-3xl mb-2">🔍</div>
+            <p class="text-sm">目前無符合條件的情報卡片</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "bg-[var(--card)] border border-[var(--border)] hover:border-indigo-500/40 rounded-xl p-4 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group";
+        card.onclick = () => openDrawer(item.id);
+
+        const urgency = (item.urgency || 'P2').toUpperCase();
+        const urgencyBadge = urgency === 'P0' 
+          ? `<span class="px-2 py-0.5 rounded text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">P0 重大突破</span>`
+          : (urgency === 'P1'
+            ? `<span class="px-2 py-0.5 rounded text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">P1 實用工具</span>`
+            : `<span class="px-2 py-0.5 rounded text-xs font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20">P2 社群爭辯</span>`);
+
+        const platformBadge = item.platform === 'X'
+          ? `<span class="px-2 py-0.5 rounded text-xs font-semibold bg-zinc-800 text-zinc-200 border border-zinc-700">𝕏 Twitter</span>`
+          : `<span class="px-2 py-0.5 rounded text-xs font-semibold bg-pink-500/10 text-pink-400 border border-pink-500/20">@ Threads</span>`;
+
+        const arb = item.arbitrage || {};
+        const hasGap = arb.hasTimeGap || arb.has_time_gap;
+        const gapHours = arb.gapHours || arb.gap_hours || '4 小時';
+        const timeGapIndicator = hasGap 
+          ? `<span class="inline-flex items-center text-xs text-amber-400 gap-1 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">⏳ 領先繁中 ${gapHours}</span>` 
+          : '';
+
+        const likes = (typeof item.likes === 'number') ? item.likes.toLocaleString() : '0';
+        const timestamp = item.timestamp_str || item.timestamp || '剛剛';
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2.5">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                ${platformBadge}
+                ${urgencyBadge}
+              </div>
+              <span class="text-xs text-[var(--muted-foreground)]">${timestamp}</span>
+            </div>
+
+            <h3 class="text-sm font-bold text-[var(--foreground)] group-hover:text-indigo-400 transition leading-snug mb-2 line-clamp-2">
+              ${item.title || '無標題情報'}
+            </h3>
+
+            <p class="text-xs text-[var(--muted-foreground)] line-clamp-2 mb-3">
+              ${item.summary || ''}
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-[var(--border)] flex items-center justify-between text-xs text-[var(--muted-foreground)]">
+            <div class="flex items-center gap-2">
+              <span class="font-medium text-[var(--foreground)]">${item.author || ''}</span>
+            </div>
+            <div>
+              ${timeGapIndicator || `<span>❤️ ${likes}</span>`}
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function updateStats() {
+      const kols = ROSTER_DATA.length;
+      const intelCount = INTEL_DATA.length;
+      const timeGaps = INTEL_DATA.filter(i => (i.arbitrage && (i.arbitrage.hasTimeGap || i.arbitrage.has_time_gap))).length;
+      
+      const elKols = document.getElementById("stat-kols");
+      if (elKols) elKols.innerHTML = `${kols} <span class="text-xs font-normal text-emerald-400">已連線</span>`;
+      const elIntel = document.getElementById("stat-intel");
+      if (elIntel) elIntel.innerHTML = `${intelCount} <span class="text-xs font-normal text-[var(--muted-foreground)]">份</span>`;
+      const elGaps = document.getElementById("stat-gaps");
+      if (elGaps) elGaps.innerHTML = `${timeGaps} <span class="text-xs font-normal text-[var(--muted-foreground)]">個議題</span>`;
+    }
+
+    function renderArbitrage() {
+      const container = document.getElementById("arbitrage-container");
+      container.innerHTML = "";
+
+      const gapItems = INTEL_DATA.filter(i => (i.arbitrage && (i.arbitrage.hasTimeGap || i.arbitrage.has_time_gap)));
+
+      if (gapItems.length === 0) {
+        container.innerHTML = `<div class="py-12 text-center text-[var(--muted-foreground)] text-xs">目前暫無偵測到顯著時間差議題</div>`;
+        return;
+      }
+
+      gapItems.forEach(item => {
+        const gapHours = item.arbitrage.gapHours || item.arbitrage.gap_hours || '數小時';
+        const threadsStatus = item.arbitrage.threadsStatus || item.arbitrage.threads_status || '繁中社群尚未大規模討論。';
+        const el = document.createElement("div");
+        el.className = "bg-[var(--surface-container-low)] border border-[var(--border)] rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4";
+        el.innerHTML = `
+          <div class="space-y-1.5 flex-1">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-xs font-bold">時差領先 ${gapHours}</span>
+              <span class="text-xs text-[var(--muted-foreground)]">源頭: ${item.author} (${item.platform})</span>
+            </div>
+            <h4 class="text-sm font-semibold text-[var(--foreground)]">${item.title}</h4>
+            <p class="text-xs text-[var(--muted-foreground)]">${threadsStatus}</p>
+          </div>
+          <button onclick="openDrawer('${item.id}')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 border border-indigo-500/30 transition whitespace-nowrap">
+            查看剝洋蔥情報 →
+          </button>
+        `;
+        container.appendChild(el);
+      });
+    }
+
+    function renderRoster() {
+      const tbody = document.getElementById("roster-table-body");
+      tbody.innerHTML = "";
+
+      ROSTER_DATA.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-[var(--surface-container-low)] transition";
+        tr.innerHTML = `
+          <td class="py-2.5 px-3">
+            <span class="px-1.5 py-0.5 rounded text-xs font-mono ${row.platform === 'X' ? 'bg-zinc-800 text-zinc-300' : 'bg-pink-500/20 text-pink-300'}">
+              ${row.platform}
+            </span>
+          </td>
+          <td class="py-2.5 px-3">
+            <div class="font-medium text-[var(--foreground)]">${row.name}</div>
+            <div class="text-[var(--muted-foreground)]">${row.handle}</div>
+          </td>
+          <td class="py-2.5 px-3 text-[var(--muted-foreground)]">${row.role}</td>
+          <td class="py-2.5 px-3 text-[var(--muted-foreground)]">${row.lastCheck}</td>
+          <td class="py-2.5 px-3 font-semibold text-indigo-400">${row.count} 則</td>
+          <td class="py-2.5 px-3">
+            <span class="inline-flex items-center text-xs text-emerald-400">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1"></span>${row.status}
+            </span>
+          </td>
+          <td class="py-2.5 px-3 text-right">
+            <button class="text-xs text-[var(--muted-foreground)] hover:text-rose-400 transition">移除</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 抽屜 (Deep-Dive Drawer) 控制
+    function openDrawer(id) {
+      const item = INTEL_DATA.find(i => String(i.id) === String(id));
+      if (!item) return;
+
+      const drawer = document.getElementById("detail-drawer");
+      const backdrop = document.getElementById("drawer-backdrop");
+      const badgesContainer = document.getElementById("drawer-header-badges");
+      const content = document.getElementById("drawer-content");
+
+      const authorRole = item.authorRole || item.author_role || 'AI 領域專家';
+      const timestamp = item.timestamp || item.timestamp_str || '剛剛';
+      const coreThesis = item.coreThesis || item.core_thesis || '無架構分析';
+      const communityViews = item.communityViews || item.community_views || { pro: '暫無評估', con: '暫無評估' };
+      const links = item.links || [];
+
+      // 徽章
+      badgesContainer.innerHTML = `
+        <span class="px-2 py-0.5 rounded text-xs font-mono font-semibold ${item.platform === 'X' ? 'bg-zinc-800 text-zinc-200' : 'bg-pink-500/20 text-pink-400'}">${item.platform}</span>
+        <span class="px-2 py-0.5 rounded text-xs font-semibold ${item.urgency === 'P0' ? 'bg-rose-500/20 text-rose-400' : (item.urgency === 'P1' ? 'bg-amber-500/20 text-amber-400' : 'bg-sky-500/20 text-sky-400')}">${item.urgency}</span>
+        <span class="text-xs text-[var(--muted-foreground)]">${timestamp}</span>
+      `;
+
+      // 深度提煉內容
+      content.innerHTML = `
+        <div>
+          <h2 class="text-lg font-bold text-[var(--foreground)] leading-snug">${item.title}</h2>
+          <div class="flex items-center gap-2 mt-2 text-xs text-[var(--muted-foreground)]">
+            <span>發布者: <strong class="text-[var(--foreground)]">${item.author}</strong> (${authorRole})</span>
+          </div>
+        </div>
+
+        <!-- 30 秒核心事實 -->
+        <div class="bg-[var(--surface-container-low)] border border-[var(--border)] rounded-xl p-4">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-indigo-400 mb-1.5">
+            <span>💡</span> 第一層：30 秒速讀摘要
+          </div>
+          <p class="text-xs text-[var(--foreground)] leading-relaxed">${item.summary}</p>
+        </div>
+
+        <!-- 技術本質 (Core Thesis) -->
+        <div class="bg-[var(--surface-container-low)] border border-[var(--border)] rounded-xl p-4">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-400 mb-1.5">
+            <span>⚙️</span> 第二層：核心技術架構解析
+          </div>
+          <p class="text-xs text-[var(--foreground)] leading-relaxed">${coreThesis}</p>
+        </div>
+
+        <!-- 社群正反交鋒 -->
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-[var(--foreground)]">⚖️ 第三層：多方觀點與社群反饋</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
+              <span class="text-emerald-400 font-bold block mb-1">👍 支持/樂觀派：</span>
+              <p class="text-[var(--muted-foreground)]">${communityViews.pro}</p>
+            </div>
+            <div class="bg-rose-500/10 border border-rose-500/20 rounded-lg p-3">
+              <span class="text-rose-400 font-bold block mb-1">⚠️ 質疑/保守派：</span>
+              <p class="text-[var(--muted-foreground)]">${communityViews.con}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 關鍵實體連結 -->
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-[var(--foreground)]">🔗 驗證連結與原始資產</div>
+          <div class="space-y-1.5">
+            ${links.map(l => `
+              <a href="${l.url}" target="_blank" class="flex items-center justify-between p-2.5 rounded-lg bg-[var(--surface-container-low)] border border-[var(--border)] hover:border-indigo-500 text-xs text-indigo-400 transition">
+                <span>${l.name}</span>
+                <span class="text-[var(--muted-foreground)]">↗</span>
+              </a>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 行動指引 (Actionable) -->
+        <div class="bg-indigo-500/10 border border-indigo-500/20 rounded-xl p-4">
+          <div class="text-xs font-bold text-indigo-400 mb-1">🎯 第四層：情報轉化建議 (So What?)</div>
+          <p class="text-xs text-[var(--foreground)] font-medium">${item.actionable}</p>
+        </div>
+      `;
+
+      backdrop.classList.remove("hidden");
+      drawer.classList.remove("translate-x-full");
+    }
+
+    function closeDrawer() {
+      const drawer = document.getElementById("detail-drawer");
+      const backdrop = document.getElementById("drawer-backdrop");
+      drawer.classList.add("translate-x-full");
+      backdrop.classList.add("hidden");
+    }
+
+    // Tab 切換
+    function switchTab(tab) {
+      document.getElementById("view-feed").classList.toggle("hidden", tab !== 'feed');
+      document.getElementById("view-arbitrage").classList.toggle("hidden", tab !== 'arbitrage');
+      document.getElementById("view-roster").classList.toggle("hidden", tab !== 'roster');
+
+      const tabs = ['feed', 'arbitrage', 'roster'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}-btn`);
+        if (t === tab) {
+          btn.className = "px-4 py-2 rounded-lg text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm transition";
+        } else {
+          btn.className = "px-4 py-2 rounded-lg text-xs font-semibold bg-[var(--surface-container-low)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)] transition";
+        }
+      });
+    }
+
+    // 篩選處理
+    function setPlatformFilter(plat) {
+      currentFilter.platform = plat;
+      ['all', 'x', 'threads'].forEach(p => {
+        const btn = document.getElementById(`btn-plat-${p}`);
+        if (p === plat.toLowerCase()) {
+          btn.className = "px-2.5 py-1 text-xs rounded-md bg-indigo-500/20 text-indigo-400 font-medium border border-indigo-500/30";
+        } else {
+          btn.className = "px-2.5 py-1 text-xs rounded-md bg-[var(--surface-container-low)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)]";
+        }
+      });
+      renderCards();
+    }
+
+    function setUrgencyFilter(urg) {
+      currentFilter.urgency = urg;
+      ['all', 'p0', 'p1', 'p2'].forEach(u => {
+        const btn = document.getElementById(`btn-urg-${u}`);
+        if (u === urg.toLowerCase()) {
+          btn.className = "px-2.5 py-1 text-xs rounded-md bg-indigo-500/20 text-indigo-400 font-medium border border-indigo-500/30";
+        } else {
+          btn.className = "px-2.5 py-1 text-xs rounded-md bg-[var(--surface-container-low)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)]";
+        }
+      });
+      renderCards();
+    }
+
+    function handleSearch() {
+      currentFilter.search = document.getElementById("searchInput").value;
+      renderCards();
+    }
+
+    function openAddSeedModal() {
+      const handle = prompt("請輸入欲追蹤的 KOL 帳號 (例如: @AnthropicAI 或 @sama):");
+      if (handle) {
+        alert("已將 " + handle + " 加入巡邏清單！代理人將於下個輪詢週期自動建立基線指紋。");
+      }
+    }
+
+    // 初始化渲染 (立即執行與事件雙保險，防止 iframe 內錯過 DOMContentLoaded)
+    function initDashboard() {
+      try {
+        renderCards();
+        renderArbitrage();
+        renderRoster();
+        updateStats();
+      } catch (err) {
+        console.error("Dashboard 初始化異常:", err);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDashboard);
+    } else {
+      initDashboard();
+    }
+  </script>
+</body>
+</html>

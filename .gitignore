@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.venv/
+venv/
+
+# 資料庫與 Session 憑證 (安全保護)
+*.db
+session_*.json
+.profile_*/
+
+# 截圖與暫存檔案
+*.png
+*.jpg
+*.log
