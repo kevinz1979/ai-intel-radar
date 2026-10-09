@@ -139,16 +139,58 @@
 
     <!-- 主視圖 3: 巡邏種子庫 (Roster) -->
     <section id="view-roster" class="hidden space-y-4">
-      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
-          <div>
-            <h2 class="text-base font-bold text-[var(--foreground)]">🎯 KOL 巡邏種子管理清單 (50~100 帳號)</h2>
-            <p class="text-xs text-[var(--muted-foreground)]">代理人每隔 15~30 分鐘自動對以下白名單進行增量掃描，避開全局抓取風控。</p>
+      <!-- 0050 汰弱留強機制看板 -->
+      <div class="bg-gradient-to-r from-[#18181b] to-[#121215] border border-indigo-500/30 rounded-2xl p-5 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-lg">
+              ⚖️
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-base font-bold text-[var(--foreground)]">AI KOL 100 指數成分股治理準則</h2>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">0050 汰弱留強機制</span>
+              </div>
+              <p class="text-xs text-[var(--muted-foreground)] mt-0.5">固定 100 席核心成分（60 位 X + 40 位 Threads），自動審核發文流動性與雜訊比，優質黑馬遞補晉升。</p>
+            </div>
           </div>
-          <button onclick="openAddSeedModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm hover:opacity-90 transition">
-            + 新增追蹤種子
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="filterRosterStatus('all')" id="btn-roster-all" class="px-2.5 py-1 text-xs rounded-md bg-indigo-500/20 text-indigo-400 font-medium border border-indigo-500/30">全部 (120+)</button>
+            <button onclick="filterRosterStatus('正選')" id="btn-roster-active" class="px-2.5 py-1 text-xs rounded-md bg-[var(--surface-container-low)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-emerald-400">正選 100 席</button>
+            <button onclick="filterRosterStatus('觀察候補')" id="btn-roster-candidate" class="px-2.5 py-1 text-xs rounded-md bg-[var(--surface-container-low)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-amber-400">觀察候補</button>
+            <button onclick="openAddSeedModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition">
+              + 推薦新種子
+            </button>
+          </div>
         </div>
+
+        <!-- 3 大審核規則指標卡 -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-[#27272a] text-xs">
+          <div class="p-2.5 rounded-lg bg-[#121215] border border-[#27272a]">
+            <div class="text-[var(--muted-foreground)] flex items-center justify-between">
+              <span>流動性考核 (發文活躍度)</span>
+              <span class="text-emerald-400 font-bold">> 0 篇 / 21天</span>
+            </div>
+            <div class="text-[11px] text-zinc-400 mt-1">連續 21 天無發文自動標記「已休眠」並釋出正選席位。</div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-[#121215] border border-[#27272a]">
+            <div class="text-[var(--muted-foreground)] flex items-center justify-between">
+              <span>信號雜訊比考核 (SNR)</span>
+              <span class="text-amber-400 font-bold">雜訊率 < 80%</span>
+            </div>
+            <div class="text-[11px] text-zinc-400 mt-1">發文多為閒聊廢話者降級至「觀察候補」，維護高含金量。</div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-[#121215] border border-[#27272a]">
+            <div class="text-[var(--muted-foreground)] flex items-center justify-between">
+              <span>黑馬晉升機制 (Buffer Zone)</span>
+              <span class="text-indigo-400 font-bold">動態替補</span>
+            </div>
+            <div class="text-[11px] text-zinc-400 mt-1">候補池中產出高價值 P0/P1 情報者，優先遞補晉升正選。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5">
 
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs border-collapse">
@@ -1235,80 +1277,1109 @@
     "platform": "X",
     "handle": "@karpathy",
     "name": "Andrej Karpathy",
-    "role": "Core AI Research & Education",
+    "role": "底層架構與大廠領袖",
+    "priority": "P0",
     "lastCheck": "2026-10-09 23:27",
     "count": 12,
-    "status": "正常"
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@swyx",
     "name": "Shawn Wang",
-    "role": "AI Engineer & Ecosystem",
+    "role": "前線工具與工程實戰",
+    "priority": "P0",
     "lastCheck": "2026-10-09 23:27",
     "count": 12,
-    "status": "正常"
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@simonw",
     "name": "Simon Willison",
-    "role": "Open Source & LLM Security",
+    "role": "前線工具與工程實戰",
+    "priority": "P0",
     "lastCheck": "2026-10-09 23:27",
     "count": 10,
-    "status": "正常"
+    "status": "正選"
   },
   {
     "platform": "Threads",
     "handle": "@ihower",
     "name": "ihower 葉平",
-    "role": "繁中軟體工程 & AI 實踐",
+    "role": "在地工程實務與架構",
+    "priority": "P0",
     "lastCheck": "2026-10-09 23:27",
     "count": 8,
-    "status": "正常"
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@sama",
     "name": "Sam Altman",
-    "role": "Frontier Labs / OpenAI",
+    "role": "底層架構與大廠領袖",
+    "priority": "P0",
     "lastCheck": "2026-10-09 23:22",
     "count": 2,
-    "status": "正常"
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ai_builder_tw",
+    "name": "Kenzo 自動化顧問",
+    "role": "在地工程實務與架構",
+    "priority": "P0",
+    "lastCheck": "2026-10-09 23:22",
+    "count": 2,
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@ylecun",
     "name": "Yann LeCun",
-    "role": "Meta AI / World Models",
-    "lastCheck": "剛剛",
+    "role": "底層架構與大廠領袖",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
     "count": 0,
-    "status": "正常"
-  },
-  {
-    "platform": "X",
-    "handle": "@DrJimFan",
-    "name": "Jim Fan",
-    "role": "NVIDIA / Embodied AI",
-    "lastCheck": "剛剛",
-    "count": 0,
-    "status": "正常"
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@alexalbert__",
     "name": "Alex Albert",
-    "role": "Anthropic DevRel",
-    "lastCheck": "剛剛",
+    "role": "前線工具與工程實戰",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
     "count": 0,
-    "status": "正常"
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@hwchase17",
+    "name": "Harrison Chase",
+    "role": "前線工具與工程實戰",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@gdb",
+    "name": "Greg Brockman",
+    "role": "底層架構與大廠領袖",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@ilyasut",
+    "name": "Ilya Sutskever",
+    "role": "底層架構與大廠領袖",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@demishassabis",
+    "name": "Demis Hassabis",
+    "role": "底層架構與大廠領袖",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@AndrewYNg",
+    "name": "Andrew Ng",
+    "role": "底層架構與大廠領袖",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@DarioAmodei",
+    "name": "Dario Amodei",
+    "role": "底層架構與大廠領袖",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@jerryjliu0",
+    "name": "Jerry Liu",
+    "role": "前線工具與工程實戰",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@dylan522p",
+    "name": "Dylan Patel",
+    "role": "商業變現與硬體算力",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@benthompson",
+    "name": "Ben Thompson",
+    "role": "商業變現與硬體算力",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@paulg",
+    "name": "Paul Graham",
+    "role": "商業變現與硬體算力",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@will_huang",
+    "name": "Will 保哥",
+    "role": "在地工程實務與架構",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@DrJimFan",
+    "name": "Jim Fan",
+    "role": "底層架構與大廠領袖",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@levelsio",
+    "name": "Pieter Levels",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@fchollet",
+    "name": "François Chollet",
+    "role": "底層架構與大廠領袖",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@quocleix",
+    "name": "Quoc Le",
+    "role": "底層架構與大廠領袖",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@goodfellow_ian",
+    "name": "Ian Goodfellow",
+    "role": "底層架構與大廠領袖",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@chrmanning",
+    "name": "Christopher Manning",
+    "role": "底層架構與大廠領袖",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@arankomatsuzaki",
+    "name": "Aran Komatsuzaki",
+    "role": "底層架構與大廠領袖",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@geoffreyhinton",
+    "name": "Geoffrey Hinton",
+    "role": "底層架構與大廠領袖",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@abacaj",
+    "name": "Anton Bacaj",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@natfriedman",
+    "name": "Nat Friedman",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@danielgross",
+    "name": "Daniel Gross",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@amanrsanger",
+    "name": "Aman Sanger",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@misstits",
+    "name": "Michael Truell",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@charliebholtz",
+    "name": "Charlie Holtz",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@skirano",
+    "name": "Skirano",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@victormustar",
+    "name": "Victor Mustar",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@rauchg",
+    "name": "Guillermo Rauch",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@amasad",
+    "name": "Amjad Masad",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@emostaque",
+    "name": "Emad Mostaque",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@jxmnop",
+    "name": "Jason Wei",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@lateinteraction",
+    "name": "Omar Khattab",
+    "role": "前線工具與工程實戰",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@geohot",
+    "name": "George Hotz",
+    "role": "商業變現與硬體算力",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@tsarnick",
+    "name": "Nick St. Pierre",
+    "role": "商業變現與硬體算力",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@daniela_amodei",
+    "name": "Daniela Amodei",
+    "role": "商業變現與硬體算力",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@alliekmiller",
+    "name": "Allie K. Miller",
+    "role": "商業變現與硬體算力",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@saranormous",
+    "name": "Sarah Guo",
+    "role": "商業變現與硬體算力",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@eladgil",
+    "name": "Elad Gil",
+    "role": "商業變現與硬體算力",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@chamath",
+    "name": "Chamath Palihapitiya",
+    "role": "商業變現與硬體算力",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@gipi_chen",
+    "name": "Gipi 游舒帆",
+    "role": "在地工程實務與架構",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ericsk",
+    "name": "Eric ShangKuan",
+    "role": "在地工程實務與架構",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@c_s_chen",
+    "name": "CS Chen",
+    "role": "在地工程實務與架構",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@tonyq_wang",
+    "name": "TonyQ 王景弘",
+    "role": "在地工程實務與架構",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@funtw_ai",
+    "name": "AI 實戰筆記",
+    "role": "在地工程實務與架構",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@vance_ai",
+    "name": "Vance 前端工程",
+    "role": "在地工程實務與架構",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@tw_cloud_dev",
+    "name": "台灣雲端架構師",
+    "role": "在地工程實務與架構",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@mkt_insight_tw",
+    "name": "行銷科技觀點",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@invest_tech_tw",
+    "name": "科技產業分析師",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@fintech_notes",
+    "name": "財經工程筆記",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@semi_tw_talk",
+    "name": "半導體老司機",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@solopreneur_tw",
+    "name": "一人創業週報",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@rohanpaul_ai",
+    "name": "Rohan Paul",
+    "role": "新銳黑馬與獨立觀察",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@shanselman",
+    "name": "Scott Hanselman",
+    "role": "前線工具與工程實戰",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@blixt",
+    "name": "Andreas Blixt",
+    "role": "前線工具與工程實戰",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@rowancheung",
+    "name": "Rowan Cheung",
+    "role": "前線工具與工程實戰",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@mattshumer_",
+    "name": "Matt Shumer",
+    "role": "前線工具與工程實戰",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@deaborah",
+    "name": "Deborah Raji",
+    "role": "前線工具與工程實戰",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@gaborcselle",
+    "name": "Gabor Cselle",
+    "role": "前線工具與工程實戰",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@Jason",
+    "name": "Jason Calacanis",
+    "role": "商業變現與硬體算力",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@BradGerstner",
+    "name": "Brad Gerstner",
+    "role": "商業變現與硬體算力",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@dpatil",
+    "name": "DJ Patil",
+    "role": "商業變現與硬體算力",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@blader",
+    "name": "Bladerunner",
+    "role": "商業變現與硬體算力",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@sama_quotes",
+    "name": "AI VC Signals",
+    "role": "商業變現與硬體算力",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@nearcyan",
+    "name": "Near",
+    "role": "新銳黑馬與獨立觀察",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@teortxe",
+    "name": "Teortxe",
+    "role": "新銳黑馬與獨立觀察",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@omarsar0",
+    "name": "Elvis Saravia",
+    "role": "新銳黑馬與獨立觀察",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@ai_curious",
+    "name": "AI Curious",
+    "role": "新銳黑馬與獨立觀察",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@code_with_vic",
+    "name": "Vic 軟體教練",
+    "role": "在地工程實務與架構",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@alex_data_tw",
+    "name": "Alex 資料科學",
+    "role": "在地工程實務與架構",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@skyline_tech",
+    "name": "硬體改裝玩家",
+    "role": "在地工程實務與架構",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@dev_kevin_tw",
+    "name": "Kevin 系統工程",
+    "role": "在地工程實務與架構",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@raymond_notes",
+    "name": "雷蒙三十",
+    "role": "在地工程實務與架構",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@growth_hacker_tw",
+    "name": "成長駭客觀點",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ai_biz_strategy",
+    "name": "AI 商業轉型顧問",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@dr_fin_tw",
+    "name": "理財醫師觀點",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@taiwan_fund_view",
+    "name": "基金經理人手記",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@hardware_supply_tw",
+    "name": "電子五哥觀察站",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@creator_economy_tw",
+    "name": "創作者經濟觀察",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@cloud_cost_tw",
+    "name": "雲端算力算盤",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@investor_ray",
+    "name": "科技創投筆記",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@mark_biz_tw",
+    "name": "中小企業主自白",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@data_monetize",
+    "name": "數據變現實驗室",
+    "role": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@prompt_tw",
+    "name": "台灣提示詞社群",
+    "role": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@student_ai_lab",
+    "name": "校園 AI 實驗室",
+    "role": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@legal_ai_tw",
+    "name": "科技法律視角",
+    "role": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@design_ai_tw",
+    "name": "設計師的 AI 工具箱",
+    "role": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@voice_ai_tw",
+    "name": "聲音克隆實驗",
+    "role": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@pm_with_ai",
+    "name": "產品經理 AI 實踐",
+    "role": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@book_summary_ai",
+    "name": "硬核科技讀書會",
+    "role": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@daily_tech_bite",
+    "name": "每日科技一口酥",
+    "role": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@freelance_ai",
+    "name": "自由接案者聯盟",
+    "role": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@tw_maker_space",
+    "name": "台灣創客社群",
+    "role": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@drfeifei",
+    "name": "Fei-Fei Li",
+    "role": "觀察候補池",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "觀察候補"
+  },
+  {
+    "platform": "X",
+    "handle": "@ylecun_fan",
+    "name": "Open Source AI Tracker",
+    "role": "觀察候補池",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "觀察候補"
+  },
+  {
+    "platform": "X",
+    "handle": "@ai_explained",
+    "name": "AI Explained",
+    "role": "觀察候補池",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "觀察候補"
+  },
+  {
+    "platform": "X",
+    "handle": "@testingcatalog",
+    "name": "TestingCatalog",
+    "role": "觀察候補池",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "觀察候補"
+  },
+  {
+    "platform": "X",
+    "handle": "@scalinglaws",
+    "name": "Compute Scaling Observer",
+    "role": "觀察候補池",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ai_daily_radar_tw",
+    "name": "AI 每日雷達測試",
+    "role": "觀察候補池",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@tw_fin_alpha",
+    "name": "台股阿爾法追蹤",
+    "role": "觀察候補池",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@hardware_bench_tw",
+    "name": "邊緣硬體評測所",
+    "role": "觀察候補池",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@local_llm_tw",
+    "name": "地端模型交流處",
+    "role": "觀察候補池",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ai_career_tw",
+    "name": "AI 職涯升級指南",
+    "role": "觀察候補池",
+    "priority": "P2",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "觀察候補"
   },
   {
     "platform": "X",
     "handle": "@ggerganov",
     "name": "Georgi Gerganov",
     "role": "Local Inference & Optimization",
-    "lastCheck": "剛剛",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
     "count": 0,
     "status": "正常"
   },
@@ -1317,7 +2388,8 @@
     "handle": "@OfficialLoganK",
     "name": "Logan Kilpatrick",
     "role": "Google DeepMind / Ecosystem",
-    "lastCheck": "剛剛",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
     "count": 0,
     "status": "正常"
   },
@@ -1326,34 +2398,8 @@
     "handle": "@willh.tw",
     "name": "Will 保哥",
     "role": "開發者技術生態",
-    "lastCheck": "剛剛",
-    "count": 0,
-    "status": "正常"
-  },
-  {
-    "platform": "Threads",
-    "handle": "@ai_builder_tw",
-    "name": "Kenzo 自動化顧問",
-    "role": "地端小模型 & n8n 整合",
-    "lastCheck": "2026-10-09 23:22",
-    "count": 2,
-    "status": "正常"
-  },
-  {
-    "platform": "X",
-    "handle": "@hwchase17",
-    "name": "Harrison Chase",
-    "role": "LangChain / Agent Frameworks",
-    "lastCheck": "剛剛",
-    "count": 0,
-    "status": "正常"
-  },
-  {
-    "platform": "X",
-    "handle": "@rohanpaul_ai",
-    "name": "Rohan Paul",
-    "role": "Paper Reading & Implementations",
-    "lastCheck": "剛剛",
+    "priority": "P0",
+    "lastCheck": "待輪詢",
     "count": 0,
     "status": "正常"
   },
@@ -1362,7 +2408,68 @@
     "handle": "@yoheinakajima",
     "name": "Yohei Nakajima",
     "role": "Autonomous Agents",
-    "lastCheck": "剛剛",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@bindureddy",
+    "name": "Bindu Reddy",
+    "role": "Enterprise AI & Open Source",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "X",
+    "handle": "@mckaywrigley",
+    "name": "McKay Wrigley",
+    "role": "AI UX / Chat Interface",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@fong_fong_ai",
+    "name": "芳芳 AI 探索",
+    "role": "AI 應用實測 & 評測",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ai_prompt_tw",
+    "name": "繁中提示工程社群",
+    "role": "提示詞 & 工作流",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@vincents_tech",
+    "name": "Vincent 科技創投",
+    "role": "AI 商業落地 & 趨勢",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
+    "count": 0,
+    "status": "正常"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@dev_taiwan_alex",
+    "name": "Alex 全端架構",
+    "role": "AI 輔助代碼與重構",
+    "priority": "P1",
+    "lastCheck": "待輪詢",
     "count": 0,
     "status": "正常"
   }
@@ -1459,12 +2566,13 @@
     }
 
     function updateStats() {
-      const kols = ROSTER_DATA.length;
+      const activeCount = ROSTER_DATA.filter(r => r.status === '正選').length || 100;
+      const totalCount = ROSTER_DATA.length;
       const intelCount = INTEL_DATA.length;
       const timeGaps = INTEL_DATA.filter(i => (i.arbitrage && (i.arbitrage.hasTimeGap || i.arbitrage.has_time_gap))).length;
       
       const elKols = document.getElementById("stat-kols");
-      if (elKols) elKols.innerHTML = `${kols} <span class="text-xs font-normal text-emerald-400">已連線</span>`;
+      if (elKols) elKols.innerHTML = `${activeCount} 席 <span class="text-xs font-normal text-emerald-400">0050模式</span>`;
       const elIntel = document.getElementById("stat-intel");
       if (elIntel) elIntel.innerHTML = `${intelCount} <span class="text-xs font-normal text-[var(--muted-foreground)]">份</span>`;
       const elGaps = document.getElementById("stat-gaps");
@@ -1504,13 +2612,46 @@
       });
     }
 
+    let currentRosterStatus = 'all';
+
+    function filterRosterStatus(status) {
+      currentRosterStatus = status;
+      ['all', 'active', 'candidate'].forEach(s => {
+        const btn = document.getElementById(`btn-roster-${s}`);
+        if (!btn) return;
+        const target = s === 'all' ? 'all' : (s === 'active' ? '正選' : '觀察候補');
+        if (target === status) {
+          btn.className = "px-2.5 py-1 text-xs rounded-md bg-indigo-500/20 text-indigo-400 font-medium border border-indigo-500/30";
+        } else {
+          btn.className = "px-2.5 py-1 text-xs rounded-md bg-[var(--surface-container-low)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-indigo-300";
+        }
+      });
+      renderRoster();
+    }
+
     function renderRoster() {
       const tbody = document.getElementById("roster-table-body");
+      if (!tbody) return;
       tbody.innerHTML = "";
 
-      ROSTER_DATA.forEach(row => {
+      const filtered = ROSTER_DATA.filter(row => {
+        if (currentRosterStatus === 'all') return true;
+        return row.status === currentRosterStatus;
+      });
+
+      filtered.forEach(row => {
         const tr = document.createElement("tr");
         tr.className = "hover:bg-[var(--surface-container-low)] transition";
+
+        let statusBadge = '';
+        if (row.status === '正選') {
+          statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span>正選成分</span>`;
+        } else if (row.status === '觀察候補') {
+          statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5"></span>觀察候補</span>`;
+        } else {
+          statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-zinc-800 text-zinc-400 border border-zinc-700"><span class="w-1.5 h-1.5 rounded-full bg-zinc-500 mr-1.5"></span>已休眠</span>`;
+        }
+
         tr.innerHTML = `
           <td class="py-2.5 px-3">
             <span class="px-1.5 py-0.5 rounded text-xs font-mono ${row.platform === 'X' ? 'bg-zinc-800 text-zinc-300' : 'bg-pink-500/20 text-pink-300'}">
@@ -1519,18 +2660,18 @@
           </td>
           <td class="py-2.5 px-3">
             <div class="font-medium text-[var(--foreground)]">${row.name}</div>
-            <div class="text-[var(--muted-foreground)]">${row.handle}</div>
+            <div class="text-[var(--muted-foreground)] font-mono">${row.handle}</div>
           </td>
-          <td class="py-2.5 px-3 text-[var(--muted-foreground)]">${row.role}</td>
+          <td class="py-2.5 px-3 text-[var(--muted-foreground)]">
+            <span class="px-2 py-0.5 rounded text-[10px] bg-zinc-800/80 border border-zinc-700/60">${row.role}</span>
+          </td>
           <td class="py-2.5 px-3 text-[var(--muted-foreground)]">${row.lastCheck}</td>
           <td class="py-2.5 px-3 font-semibold text-indigo-400">${row.count} 則</td>
           <td class="py-2.5 px-3">
-            <span class="inline-flex items-center text-xs text-emerald-400">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1"></span>${row.status}
-            </span>
+            ${statusBadge}
           </td>
           <td class="py-2.5 px-3 text-right">
-            <button class="text-xs text-[var(--muted-foreground)] hover:text-rose-400 transition">移除</button>
+            <span class="text-[11px] text-zinc-500 font-mono">${row.priority || 'P1'}</span>
           </td>
         `;
         tbody.appendChild(tr);

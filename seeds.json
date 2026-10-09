@@ -3,184 +3,992 @@
     "platform": "X",
     "handle": "@karpathy",
     "name": "Andrej Karpathy",
-    "category": "Core AI Research & Education",
+    "category": "底層架構與大廠領袖",
     "priority": "P0",
-    "tags": ["LLM", "Inference", "Training", "Autonomous"]
+    "tags": ["LLM", "Inference", "nanoMoE", "Autonomous"],
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@sama",
     "name": "Sam Altman",
-    "category": "Frontier Labs / OpenAI",
+    "category": "底層架構與大廠領袖",
     "priority": "P0",
-    "tags": ["OpenAI", "AGI", "Policy"]
+    "tags": ["OpenAI", "AGI", "Policy"],
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@ylecun",
     "name": "Yann LeCun",
-    "category": "Meta AI / World Models",
+    "category": "底層架構與大廠領袖",
     "priority": "P0",
-    "tags": ["JEPA", "OpenSource", "Critique"]
+    "tags": ["Meta AI", "JEPA", "World Models", "OpenSource"],
+    "status": "正選"
   },
   {
     "platform": "X",
-    "handle": "@swyx",
-    "name": "Shawn Wang",
-    "category": "AI Engineer & Ecosystem",
+    "handle": "@gdb",
+    "name": "Greg Brockman",
+    "category": "底層架構與大廠領袖",
     "priority": "P0",
-    "tags": ["AI Engineer", "Tools", "Latent Space"]
+    "tags": ["OpenAI", "Scaling", "Infrastructure"],
+    "status": "正選"
   },
   {
     "platform": "X",
-    "handle": "@simonw",
-    "name": "Simon Willison",
-    "category": "Open Source & LLM Security",
+    "handle": "@ilyasut",
+    "name": "Ilya Sutskever",
+    "category": "底層架構與大廠領袖",
     "priority": "P0",
-    "tags": ["Datasette", "Prompt Injection", "Evals"]
+    "tags": ["SSI", "Safety", "Superintelligence"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@demishassabis",
+    "name": "Demis Hassabis",
+    "category": "底層架構與大廠領袖",
+    "priority": "P0",
+    "tags": ["DeepMind", "Gemini", "AlphaFold"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@AndrewYNg",
+    "name": "Andrew Ng",
+    "category": "底層架構與大廠領袖",
+    "priority": "P0",
+    "tags": ["Education", "Agentic Workflow", "Landing AI"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@DarioAmodei",
+    "name": "Dario Amodei",
+    "category": "底層架構與大廠領袖",
+    "priority": "P0",
+    "tags": ["Anthropic", "Claude", "Scaling"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@fchollet",
+    "name": "François Chollet",
+    "category": "底層架構與大廠領袖",
+    "priority": "P1",
+    "tags": ["ARC-AGI", "Keras", "Reasoning"],
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@DrJimFan",
     "name": "Jim Fan",
-    "category": "NVIDIA / Embodied AI",
+    "category": "底層架構與大廠領袖",
+    "priority": "P1",
+    "tags": ["NVIDIA", "Embodied AI", "Robotics"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@quocleix",
+    "name": "Quoc Le",
+    "category": "底層架構與大廠領袖",
+    "priority": "P1",
+    "tags": ["DeepMind", "AutoML", "Transformer"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@goodfellow_ian",
+    "name": "Ian Goodfellow",
+    "category": "底層架構與大廠領袖",
+    "priority": "P1",
+    "tags": ["GAN", "Deep Learning", "Robustness"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@chrmanning",
+    "name": "Christopher Manning",
+    "category": "底層架構與大廠領袖",
+    "priority": "P1",
+    "tags": ["Stanford", "NLP", "Representation"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@arankomatsuzaki",
+    "name": "Aran Komatsuzaki",
+    "category": "底層架構與大廠領袖",
+    "priority": "P1",
+    "tags": ["arXiv", "Papers", "Pretraining"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@geoffreyhinton",
+    "name": "Geoffrey Hinton",
+    "category": "底層架構與大廠領袖",
+    "priority": "P1",
+    "tags": ["Backprop", "Cognitive", "Philosophy"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@swyx",
+    "name": "Shawn Wang",
+    "category": "前線工具與工程實戰",
     "priority": "P0",
-    "tags": ["Robotics", "Multimodal", "Voyager"]
+    "tags": ["AI Engineer", "DSPy", "Latent Space"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@simonw",
+    "name": "Simon Willison",
+    "category": "前線工具與工程實戰",
+    "priority": "P0",
+    "tags": ["Datasette", "LLM Security", "Prompt Injection"],
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@alexalbert__",
     "name": "Alex Albert",
-    "category": "Anthropic DevRel",
+    "category": "前線工具與工程實戰",
     "priority": "P0",
-    "tags": ["Claude", "Prompting", "Artifacts"]
+    "tags": ["Anthropic", "Claude Artifacts", "Prompting"],
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@hwchase17",
     "name": "Harrison Chase",
-    "category": "LangChain / Agent Frameworks",
-    "priority": "P1",
-    "tags": ["LangGraph", "Agents", "RAG"]
-  },
-  {
-    "platform": "X",
-    "handle": "@ggerganov",
-    "name": "Georgi Gerganov",
-    "category": "Local Inference & Optimization",
+    "category": "前線工具與工程實戰",
     "priority": "P0",
-    "tags": ["llama.cpp", "whisper.cpp", "Quantization"]
+    "tags": ["LangChain", "LangGraph", "Agents"],
+    "status": "正選"
   },
   {
     "platform": "X",
-    "handle": "@OfficialLoganK",
-    "name": "Logan Kilpatrick",
-    "category": "Google DeepMind / Ecosystem",
+    "handle": "@jerryjliu0",
+    "name": "Jerry Liu",
+    "category": "前線工具與工程實戰",
     "priority": "P0",
-    "tags": ["Gemini", "Developer", "API"]
+    "tags": ["LlamaIndex", "RAG", "Data Pipeline"],
+    "status": "正選"
   },
   {
     "platform": "X",
-    "handle": "@rohanpaul_ai",
-    "name": "Rohan Paul",
-    "category": "Paper Reading & Implementations",
+    "handle": "@abacaj",
+    "name": "Anton Bacaj",
+    "category": "前線工具與工程實戰",
     "priority": "P1",
-    "tags": ["arXiv", "Code Walkthrough", "Tutorial"]
+    "tags": ["Local LLM", "vLLM", "Ollama"],
+    "status": "正選"
   },
   {
     "platform": "X",
-    "handle": "@yoheinakajima",
-    "name": "Yohei Nakajima",
-    "category": "Autonomous Agents",
+    "handle": "@natfriedman",
+    "name": "Nat Friedman",
+    "category": "前線工具與工程實戰",
     "priority": "P1",
-    "tags": ["BabyAGI", "Workflow", "Agentic"]
+    "tags": ["GitHub", "AI Grants", "Compute"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@danielgross",
+    "name": "Daniel Gross",
+    "category": "前線工具與工程實戰",
+    "priority": "P1",
+    "tags": ["Andromeda Cluster", "AI Compute", "Startups"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@amanrsanger",
+    "name": "Aman Sanger",
+    "category": "前線工具與工程實戰",
+    "priority": "P1",
+    "tags": ["Cursor", "Composer", "AI IDE"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@misstits",
+    "name": "Michael Truell",
+    "category": "前線工具與工程實戰",
+    "priority": "P1",
+    "tags": ["Cursor CEO", "Agentic Coding", "Developer Experience"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@charliebholtz",
+    "name": "Charlie Holtz",
+    "category": "前線工具與工程實戰",
+    "priority": "P1",
+    "tags": ["Replicate", "Vision", "Voice AI"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@skirano",
+    "name": "Skirano",
+    "category": "前線工具與工程實戰",
+    "priority": "P1",
+    "tags": ["Generative UI", "Frontend", "Claude Artifacts"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@victormustar",
+    "name": "Victor Mustar",
+    "category": "前線工具與工程實戰",
+    "priority": "P1",
+    "tags": ["HuggingFace", "UI/UX", "Open Models"],
+    "status": "正選"
   },
   {
     "platform": "X",
     "handle": "@levelsio",
     "name": "Pieter Levels",
-    "category": "AI Solopreneur / Applied AI",
+    "category": "前線工具與工程實戰",
     "priority": "P1",
-    "tags": ["Indie Hacker", "AI Video", "SaaS"]
+    "tags": ["PhotoAI", "Indie Hacker", "Solopreneur"],
+    "status": "正選"
   },
   {
     "platform": "X",
-    "handle": "@bindureddy",
-    "name": "Bindu Reddy",
-    "category": "Enterprise AI & Open Source",
+    "handle": "@rauchg",
+    "name": "Guillermo Rauch",
+    "category": "前線工具與工程實戰",
     "priority": "P1",
-    "tags": ["Abacus", "Open Source vs Closed", "Benchmarks"]
+    "tags": ["Vercel", "v0", "Next.js", "Edge Compute"],
+    "status": "正選"
   },
   {
     "platform": "X",
-    "handle": "@mckaywrigley",
-    "name": "McKay Wrigley",
-    "category": "AI UX / Chat Interface",
+    "handle": "@amasad",
+    "name": "Amjad Masad",
+    "category": "前線工具與工程實戰",
     "priority": "P1",
-    "tags": ["ChatbotUI", "Cursor", "Voice"]
+    "tags": ["Replit", "Agentic Coding", "Cloud IDE"],
+    "status": "正選"
   },
+  {
+    "platform": "X",
+    "handle": "@emostaque",
+    "name": "Emad Mostaque",
+    "category": "前線工具與工程實戰",
+    "priority": "P1",
+    "tags": ["Stability AI", "Decentralized AI", "Compute"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@jxmnop",
+    "name": "Jason Wei",
+    "category": "前線工具與工程實戰",
+    "priority": "P1",
+    "tags": ["OpenAI", "CoT", "Emergent Abilities"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@lateinteraction",
+    "name": "Omar Khattab",
+    "category": "前線工具與工程實戰",
+    "priority": "P1",
+    "tags": ["DSPy", "ColBERT", "Prompt Compilation"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@shanselman",
+    "name": "Scott Hanselman",
+    "category": "前線工具與工程實戰",
+    "priority": "P2",
+    "tags": ["Microsoft", "DevRel", "Productivity"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@blixt",
+    "name": "Andreas Blixt",
+    "category": "前線工具與工程實戰",
+    "priority": "P2",
+    "tags": ["WebGPU", "In-Browser LLM", "Performance"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@rowancheung",
+    "name": "Rowan Cheung",
+    "category": "前線工具與工程實戰",
+    "priority": "P2",
+    "tags": ["The Rundown", "Tool Aggregation", "Breakthroughs"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@mattshumer_",
+    "name": "Matt Shumer",
+    "category": "前線工具與工程實戰",
+    "priority": "P2",
+    "tags": ["HyperWrite", "Reflection", "Writing"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@deaborah",
+    "name": "Deborah Raji",
+    "category": "前線工具與工程實戰",
+    "priority": "P2",
+    "tags": ["AI Audit", "Safety", "Evaluation"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@gaborcselle",
+    "name": "Gabor Cselle",
+    "category": "前線工具與工程實戰",
+    "priority": "P2",
+    "tags": ["Pew Research", "Prototyping", "MVP"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@dylan522p",
+    "name": "Dylan Patel",
+    "category": "商業變現與硬體算力",
+    "priority": "P0",
+    "tags": ["SemiAnalysis", "TSMC", "NVIDIA", "CapEx"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@benthompson",
+    "name": "Ben Thompson",
+    "category": "商業變現與硬體算力",
+    "priority": "P0",
+    "tags": ["Stratechery", "Aggregation Theory", "Monetization"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@paulg",
+    "name": "Paul Graham",
+    "category": "商業變現與硬體算力",
+    "priority": "P0",
+    "tags": ["Y Combinator", "Startups", "Moats"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@geohot",
+    "name": "George Hotz",
+    "category": "商業變現與硬體算力",
+    "priority": "P1",
+    "tags": ["tinygrad", "Hardware", "Compute Cost"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@tsarnick",
+    "name": "Nick St. Pierre",
+    "category": "商業變現與硬體算力",
+    "priority": "P1",
+    "tags": ["Midjourney", "Generative Media", "Commercial Use"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@daniela_amodei",
+    "name": "Daniela Amodei",
+    "category": "商業變現與硬體算力",
+    "priority": "P1",
+    "tags": ["Anthropic President", "Enterprise AI", "Governance"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@alliekmiller",
+    "name": "Allie K. Miller",
+    "category": "商業變現與硬體算力",
+    "priority": "P1",
+    "tags": ["Enterprise ROI", "Business Strategy", "Adoption"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@saranormous",
+    "name": "Sarah Guo",
+    "category": "商業變現與硬體算力",
+    "priority": "P1",
+    "tags": ["Conviction VC", "AI Infrastructure", "No Priors"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@eladgil",
+    "name": "Elad Gil",
+    "category": "商業變現與硬體算力",
+    "priority": "P1",
+    "tags": ["AI Playbook", "High Growth", "Market Dynamics"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@chamath",
+    "name": "Chamath Palihapitiya",
+    "category": "商業變現與硬體算力",
+    "priority": "P1",
+    "tags": ["All-In", "Cloud CapEx", "Power & Energy"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@Jason",
+    "name": "Jason Calacanis",
+    "category": "商業變現與硬體算力",
+    "priority": "P2",
+    "tags": ["All-In", "Angel Investing", "SaaS Margins"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@BradGerstner",
+    "name": "Brad Gerstner",
+    "category": "商業變現與硬體算力",
+    "priority": "P2",
+    "tags": ["Altimeter Capital", "Hyperscalers", "Tech Stocks"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@dpatil",
+    "name": "DJ Patil",
+    "category": "商業變現與硬體算力",
+    "priority": "P2",
+    "tags": ["Data Science", "Public Policy", "Healthcare AI"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@blader",
+    "name": "Bladerunner",
+    "category": "商業變現與硬體算力",
+    "priority": "P2",
+    "tags": ["Semiconductors", "Server Supply Chain", "Foundry"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@sama_quotes",
+    "name": "AI VC Signals",
+    "category": "商業變現與硬體算力",
+    "priority": "P2",
+    "tags": ["VC Deals", "Seed Funding", "Market Trends"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@nearcyan",
+    "name": "Near",
+    "category": "新銳黑馬與獨立觀察",
+    "priority": "P2",
+    "tags": ["Scaling Laws", "Forecasting", "Compute Economics"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@teortxe",
+    "name": "Teortxe",
+    "category": "新銳黑馬與獨立觀察",
+    "priority": "P2",
+    "tags": ["Red Teaming", "Jailbreaks", "System Vulnerabilities"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@rohanpaul_ai",
+    "name": "Rohan Paul",
+    "category": "新銳黑馬與獨立觀察",
+    "priority": "P2",
+    "tags": ["Paper Walkthroughs", "PyTorch", "HuggingFace"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@omarsar0",
+    "name": "Elvis Saravia",
+    "category": "新銳黑馬與獨立觀察",
+    "priority": "P2",
+    "tags": ["DAIR.AI", "Prompt Engineering Guide", "Tutorials"],
+    "status": "正選"
+  },
+  {
+    "platform": "X",
+    "handle": "@ai_curious",
+    "name": "AI Curious",
+    "category": "新銳黑馬與獨立觀察",
+    "priority": "P2",
+    "tags": ["Fast Papers", "Daily ArXiv", "Visual Summaries"],
+    "status": "正選"
+  },
+
   {
     "platform": "Threads",
     "handle": "@ihower",
     "name": "ihower 葉平",
-    "category": "繁中軟體工程 & AI 實踐",
+    "category": "在地工程實務與架構",
     "priority": "P0",
-    "tags": ["軟體架構", "AI 開發者", "工作流"]
-  },
-  {
-    "platform": "Threads",
-    "handle": "@willh.tw",
-    "name": "Will 保哥",
-    "category": "開發者技術生態",
-    "priority": "P0",
-    "tags": [".NET", "Copilot", "開發工具"]
-  },
-  {
-    "platform": "Threads",
-    "handle": "@fong_fong_ai",
-    "name": "芳芳 AI 探索",
-    "category": "AI 應用實測 & 評測",
-    "priority": "P1",
-    "tags": ["工具開箱", "自動化", "生產力"]
-  },
-  {
-    "platform": "Threads",
-    "handle": "@ai_prompt_tw",
-    "name": "繁中提示工程社群",
-    "category": "提示詞 & 工作流",
-    "priority": "P1",
-    "tags": ["Prompt", "實戰案例", "業務導入"]
-  },
-  {
-    "platform": "Threads",
-    "handle": "@vincents_tech",
-    "name": "Vincent 科技創投",
-    "category": "AI 商業落地 & 趨勢",
-    "priority": "P1",
-    "tags": ["市場動態", "融資", "商業模式"]
-  },
-  {
-    "platform": "Threads",
-    "handle": "@dev_taiwan_alex",
-    "name": "Alex 全端架構",
-    "category": "AI 輔助代碼與重構",
-    "priority": "P1",
-    "tags": ["Cursor", "Next.js", "代碼品質"]
+    "tags": ["Framework Desktop", "OCuLink", "5070 Ti", "架構邊界"],
+    "status": "正選"
   },
   {
     "platform": "Threads",
     "handle": "@ai_builder_tw",
     "name": "Kenzo 自動化顧問",
-    "category": "地端小模型 & n8n 整合",
-    "priority": "P1",
-    "tags": ["n8n", "Ollama", "中小企業"]
+    "category": "在地工程實務與架構",
+    "priority": "P0",
+    "tags": ["中小企業落地", "RTX 4090", "vLLM 8B", "回本帳"],
+    "status": "正選"
   },
   {
     "platform": "Threads",
-    "handle": "@agentic_flow_tw",
-    "name": "Agentic 自動流",
-    "category": "多代理人實戰",
+    "handle": "@will_huang",
+    "name": "Will 保哥",
+    "category": "在地工程實務與架構",
+    "priority": "P0",
+    "tags": ["AI Copilot", "開發者工具", "軟體工程實務"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@gipi_chen",
+    "name": "Gipi 游舒帆",
+    "category": "在地工程實務與架構",
     "priority": "P1",
-    "tags": ["Multi-agent", "自動化", "知識庫"]
+    "tags": ["商業思維", "企業數位轉型", "專案管理"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ericsk",
+    "name": "Eric ShangKuan",
+    "category": "在地工程實務與架構",
+    "priority": "P1",
+    "tags": ["技術傳教", "GDE", "全端架構"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@c_s_chen",
+    "name": "CS Chen",
+    "category": "在地工程實務與架構",
+    "priority": "P1",
+    "tags": ["後端架構", "分散式系統", "雲端資料"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@tonyq_wang",
+    "name": "TonyQ 王景弘",
+    "category": "在地工程實務與架構",
+    "priority": "P1",
+    "tags": ["數位治理", "開源社群", "大型系統架構"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@funtw_ai",
+    "name": "AI 實戰筆記",
+    "category": "在地工程實務與架構",
+    "priority": "P1",
+    "tags": ["LangChain", "RAG 地端", "知識庫構建"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@vance_ai",
+    "name": "Vance 前端工程",
+    "category": "在地工程實務與架構",
+    "priority": "P1",
+    "tags": ["Cursor", "Tailwind", "前端自動化"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@tw_cloud_dev",
+    "name": "台灣雲端架構師",
+    "category": "在地工程實務與架構",
+    "priority": "P1",
+    "tags": ["地端 GPU", "伺服器採購", "混合雲"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@code_with_vic",
+    "name": "Vic 軟體教練",
+    "category": "在地工程實務與架構",
+    "priority": "P2",
+    "tags": ["工程教育", "AI 時代學習", "代碼重構"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@alex_data_tw",
+    "name": "Alex 資料科學",
+    "category": "在地工程實務與架構",
+    "priority": "P2",
+    "tags": ["商業分析", "DuckDB", "本地模型推論"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@skyline_tech",
+    "name": "硬體改裝玩家",
+    "category": "在地工程實務與架構",
+    "priority": "P2",
+    "tags": ["OCuLink", "迷你主機", "顯卡散熱"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@dev_kevin_tw",
+    "name": "Kevin 系統工程",
+    "category": "在地工程實務與架構",
+    "priority": "P2",
+    "tags": ["自動化腳本", "企業流程", "PowerShell"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@raymond_notes",
+    "name": "雷蒙三十",
+    "category": "在地工程實務與架構",
+    "priority": "P2",
+    "tags": ["生產力工具", "Notion", "第二大腦工作流"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@mkt_insight_tw",
+    "name": "行銷科技觀點",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P1",
+    "tags": ["GenAI 內容變現", "流量獲取", "商業模式"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@invest_tech_tw",
+    "name": "科技產業分析師",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P1",
+    "tags": ["台積電 CoWoS", "0050 供應鏈", "先進封裝"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@fintech_notes",
+    "name": "財經工程筆記",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P1",
+    "tags": ["指數投資", "0050 長期持有", "資產配置"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@semi_tw_talk",
+    "name": "半導體老司機",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P1",
+    "tags": ["晶圓代工", "資本支出 CapEx", "毛利率拆解"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@solopreneur_tw",
+    "name": "一人創業週報",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P1",
+    "tags": ["獨立開發者", "微型 SaaS", "單人全端交付"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@growth_hacker_tw",
+    "name": "成長駭客觀點",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "tags": ["Threads 演算法", "爆款邏輯", "自媒體獲客"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ai_biz_strategy",
+    "name": "AI 商業轉型顧問",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "tags": ["傳統產業導入", "ROI 評估", "封閉流程"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@dr_fin_tw",
+    "name": "理財醫師觀點",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "tags": ["定期定額", "心理素質", "市場恐慌加碼"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@taiwan_fund_view",
+    "name": "基金經理人手記",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "tags": ["美股科技 CapEx", "伺服器出貨量", "大盤估值"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@hardware_supply_tw",
+    "name": "電子五哥觀察站",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "tags": ["鴻海廣達緯創", "AI 伺服器代工", "毛利變化"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@creator_economy_tw",
+    "name": "創作者經濟觀察",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "tags": ["繁中社群知識付費", "寫作變現", "個人 IP"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@cloud_cost_tw",
+    "name": "雲端算力算盤",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "tags": ["AWS API 計費", "地端主機回本", "Token 成本"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@investor_ray",
+    "name": "科技創投筆記",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "tags": ["早期 AI 專案", "護城河驗證", "市場天花板"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@mark_biz_tw",
+    "name": "中小企業主自白",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "tags": ["老闆真實心聲", "員工生產力", "降本增效"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@data_monetize",
+    "name": "數據變現實驗室",
+    "category": "商業變現、投資與產業觀點",
+    "priority": "P2",
+    "tags": ["垂直領域數據", "結構化清洗", "自動化管線"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@prompt_tw",
+    "name": "台灣提示詞社群",
+    "category": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "tags": ["實用指令", "工作流模板", "繁中提示詞"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@student_ai_lab",
+    "name": "校園 AI 實驗室",
+    "category": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "tags": ["年輕世代學習", "開源模型", "黑客松"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@legal_ai_tw",
+    "name": "科技法律視角",
+    "category": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "tags": ["資料隱私", "AI 著作權", "合規風險"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@design_ai_tw",
+    "name": "設計師的 AI 工具箱",
+    "category": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "tags": ["Midjourney 商業應用", "向量轉圖", "視覺設計"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@voice_ai_tw",
+    "name": "聲音克隆實驗",
+    "category": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "tags": ["TTS", "Podcast 自動化", "多語音頻"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@pm_with_ai",
+    "name": "產品經理 AI 實踐",
+    "category": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "tags": ["PRD 自動化", "競品分析", "敏捷開發"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@book_summary_ai",
+    "name": "硬核科技讀書會",
+    "category": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "tags": ["經典書籍精讀", "架構拆解", "心智模型"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@daily_tech_bite",
+    "name": "每日科技一口酥",
+    "category": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "tags": ["碎片時間速讀", "關鍵事件", "極簡總結"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@freelance_ai",
+    "name": "自由接案者聯盟",
+    "category": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "tags": ["接案報價", "AI 輔助交付", "副業效率"],
+    "status": "正選"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@tw_maker_space",
+    "name": "台灣創客社群",
+    "category": "新銳黑馬與自媒體新星",
+    "priority": "P2",
+    "tags": ["3D 列印", "開源硬體", "樹莓派 AI"],
+    "status": "正選"
+  },
+
+  {
+    "platform": "X",
+    "handle": "@drfeifei",
+    "name": "Fei-Fei Li",
+    "category": "觀察候補池",
+    "priority": "P1",
+    "tags": ["Spatial Intelligence", "World Labs", "ImageNet"],
+    "status": "觀察候補"
+  },
+  {
+    "platform": "X",
+    "handle": "@ylecun_fan",
+    "name": "Open Source AI Tracker",
+    "category": "觀察候補池",
+    "priority": "P2",
+    "tags": ["LLaMA", "DeepSeek", "Benchmarks"],
+    "status": "觀察候補"
+  },
+  {
+    "platform": "X",
+    "handle": "@ai_explained",
+    "name": "AI Explained",
+    "category": "觀察候補池",
+    "priority": "P2",
+    "tags": ["Analysis", "Evaluations", "Frontier Tests"],
+    "status": "觀察候補"
+  },
+  {
+    "platform": "X",
+    "handle": "@testingcatalog",
+    "name": "TestingCatalog",
+    "category": "觀察候補池",
+    "priority": "P2",
+    "tags": ["Beta Features", "Unreleased AI Tools", "Leaks"],
+    "status": "觀察候補"
+  },
+  {
+    "platform": "X",
+    "handle": "@scalinglaws",
+    "name": "Compute Scaling Observer",
+    "category": "觀察候補池",
+    "priority": "P2",
+    "tags": ["Data Center Power", "CapEx", "Megawatt"],
+    "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ai_daily_radar_tw",
+    "name": "AI 每日雷達測試",
+    "category": "觀察候補池",
+    "priority": "P2",
+    "tags": ["社群熱度", "互動測試", "候補監控"],
+    "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@tw_fin_alpha",
+    "name": "台股阿爾法追蹤",
+    "category": "觀察候補池",
+    "priority": "P2",
+    "tags": ["ETF 資金流向", "0050 規模", "長線定期"],
+    "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@hardware_bench_tw",
+    "name": "邊緣硬體評測所",
+    "category": "觀察候補池",
+    "priority": "P2",
+    "tags": ["消費級顯卡", "AI 壓測", "熱插拔介面"],
+    "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@local_llm_tw",
+    "name": "地端模型交流處",
+    "category": "觀察候補池",
+    "priority": "P2",
+    "tags": ["量化技術", "AWQ 4-bit", "微型主機推論"],
+    "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ai_career_tw",
+    "name": "AI 職涯升級指南",
+    "category": "觀察候補池",
+    "priority": "P2",
+    "tags": ["公職轉型", "文職自動化", "副業技能"],
+    "status": "觀察候補"
   }
 ]

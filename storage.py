@@ -84,19 +84,21 @@ def init_db():
             for s in seeds:
                 cursor.execute("""
                 INSERT INTO seeds (platform, handle, name, category, priority, tags, status)
-                VALUES (?, ?, ?, ?, ?, ?, '正常')
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(handle) DO UPDATE SET
                     name=excluded.name,
                     category=excluded.category,
                     priority=excluded.priority,
-                    tags=excluded.tags
+                    tags=excluded.tags,
+                    status=excluded.status
                 """, (
                     s["platform"],
                     s["handle"],
                     s["name"],
                     s.get("category", ""),
                     s.get("priority", "P1"),
-                    json.dumps(s.get("tags", []), ensure_ascii=False)
+                    json.dumps(s.get("tags", []), ensure_ascii=False),
+                    s.get("status", "正選")
                 ))
             conn.commit()
 
@@ -211,7 +213,14 @@ def get_roster_summary() -> List[Dict[str, Any]]:
     FROM seeds s
     LEFT JOIN raw_posts r ON s.handle = r.author_handle
     GROUP BY s.id
-    ORDER BY s.priority ASC, post_count DESC
+    ORDER BY 
+        CASE 
+            WHEN s.status = '正選' THEN 1 
+            WHEN s.status = '觀察候補' THEN 2 
+            ELSE 3 
+        END,
+        s.priority ASC, 
+        post_count DESC
     """)
     rows = cursor.fetchall()
     conn.close()

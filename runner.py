@@ -17,6 +17,7 @@ from storage import (
 )
 from analyzer import AgenticAnalyzer
 from poller import RealSocialPoller
+from rebalancer import run_0050_kol_rebalance
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOCAL_INDEX_PATH = os.path.join(BASE_DIR, "index.html")
@@ -48,15 +49,16 @@ def sync_to_dashboard(reports, roster):
 
     # 替換 ROSTER_DATA
     roster_clean = []
-    for r in roster[:15]:
+    for r in roster[:120]:
         roster_clean.append({
             "platform": r["platform"],
             "handle": r["handle"],
             "name": r["name"],
             "role": r.get("category", "AI 領域專家"),
-            "lastCheck": r.get("last_polled_at") or "剛剛",
+            "priority": r.get("priority", "P1"),
+            "lastCheck": r.get("last_polled_at") or "待輪詢",
             "count": r.get("post_count", 0),
-            "status": r.get("status", "正常")
+            "status": r.get("status", "正選")
         })
     roster_json = json.dumps(roster_clean, ensure_ascii=False, indent=2)
     html = re.sub(r"const ROSTER_DATA = \[.*?\];", lambda _: f"const ROSTER_DATA = {roster_json};", html, flags=re.DOTALL)
@@ -79,8 +81,10 @@ def run_patrol_cycle():
     print(f"🚀 [AI 情報雷達] 啟動巡邏作業 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
 
-    # 1. 初始化資料庫
+    # 1. 初始化資料庫並執行 0050 汰弱留強檢核
     init_db()
+    rebalance_rep = run_0050_kol_rebalance()
+    print(f"⚖️ [0050 治理] 成分股檢核完畢：正選 X {rebalance_rep['active_x']} 席 / Threads {rebalance_rep['active_threads']} 席")
 
     # 2. 執行真實雙軌巡邏
     poller = RealSocialPoller()
