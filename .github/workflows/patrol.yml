@@ -1,0 +1,43 @@
+name: AI Social Intel Patrol
+
+on:
+  schedule:
+    # 每 30 分鐘自動於雲端執行一次巡邏作業
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # 支援在 GitHub 網頁上手動點擊執行按鈕
+
+permissions:
+  contents: write
+
+jobs:
+  patrol-and-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 檢出專案代碼
+        uses: actions/checkout@v4
+
+      - name: 設定 Python 環境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 安裝專案依賴
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
+
+      - name: 執行雙軌情報巡邏與提煉 (X & Threads)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python runner.py
+
+      - name: 自動推送最新情報至 GitHub Pages
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(auto-patrol): update intelligence cards [skip ci]" && git push)

@@ -18,15 +18,18 @@ from storage import (
 from analyzer import AgenticAnalyzer
 from poller import RealSocialPoller
 
-DASHBOARD_HTML_PATH = r"C:\Users\kevinz\.gemini\antigravity\brain\e4c2ce29-1de8-411a-9781-e6565c3f5626\intel_dashboard.html"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOCAL_INDEX_PATH = os.path.join(BASE_DIR, "index.html")
+BRAIN_HTML_PATH = r"C:\Users\kevinz\.gemini\antigravity\brain\e4c2ce29-1de8-411a-9781-e6565c3f5626\intel_dashboard.html"
 
 def sync_to_dashboard(reports, roster):
     """將 SQLite 最新提煉的情報同步寫入 Web App 儀控表 HTML"""
-    if not os.path.exists(DASHBOARD_HTML_PATH):
-        print(f"[Runner] 找不到儀控表文件: {DASHBOARD_HTML_PATH}")
+    target_path = LOCAL_INDEX_PATH if os.path.exists(LOCAL_INDEX_PATH) else BRAIN_HTML_PATH
+    if not os.path.exists(target_path):
+        print(f"[Runner] 找不到儀控表文件: {target_path}")
         return
 
-    with open(DASHBOARD_HTML_PATH, "r", encoding="utf-8") as f:
+    with open(target_path, "r", encoding="utf-8") as f:
         html = f.read()
 
     # 清洗 reports 內的所有字串，確保不含任何換行符號
@@ -58,8 +61,16 @@ def sync_to_dashboard(reports, roster):
     roster_json = json.dumps(roster_clean, ensure_ascii=False, indent=2)
     html = re.sub(r"const ROSTER_DATA = \[.*?\];", lambda _: f"const ROSTER_DATA = {roster_json};", html, flags=re.DOTALL)
 
-    with open(DASHBOARD_HTML_PATH, "w", encoding="utf-8") as f:
+    # 寫入專案根目錄 index.html (供 GitHub Pages 與線上使用)
+    with open(LOCAL_INDEX_PATH, "w", encoding="utf-8") as f:
         f.write(html)
+    # 若本地 IDE 預覽目錄存在，同步更新
+    if os.path.exists(os.path.dirname(BRAIN_HTML_PATH)):
+        try:
+            with open(BRAIN_HTML_PATH, "w", encoding="utf-8") as f:
+                f.write(html)
+        except Exception:
+            pass
     print(f"[Runner] 儀控表已成功同步更新！共寫入 {len(clean_reports)} 則乾淨格式情報卡片。")
 
 def run_patrol_cycle():
