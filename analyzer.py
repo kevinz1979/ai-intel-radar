@@ -468,6 +468,26 @@ class AgenticAnalyzer:
             ltype = "github" if "github.com" in u else ("paper" if "arxiv.org" in u else "link")
             links.append({"name": "延伸連結", "url": u, "type": ltype})
 
+        # 計算真實貼文 URL (精確定位到推文 ID 或 Threads 帳號頁面，徹底杜絕 # 號)
+        clean_author = author.lstrip("@")
+        raw_pid = str(post.get("post_id") or post.get("raw_post_id") or "")
+        if platform == "X":
+            tweet_match = re.search(r"\d{15,25}", raw_pid)
+            if tweet_match:
+                post_url = f"https://x.com/{clean_author}/status/{tweet_match.group(0)}"
+            else:
+                post_url = f"https://x.com/{clean_author}" if clean_author else "https://x.com"
+        else:
+            if raw_pid.startswith("th_post_"):
+                post_url = f"https://www.threads.net/@{clean_author}/post/{raw_pid.replace('th_post_', '')}"
+            else:
+                post_url = f"https://www.threads.net/@{clean_author}" if clean_author else "https://www.threads.net"
+
+        all_links = [{"name": f"原始貼文 ({platform} @{clean_author})", "url": post_url, "type": "post"}]
+        for l in links:
+            if l["url"] != post_url and l["url"] != "#":
+                all_links.append(l)
+
         # A. 優先嘗試領域知識庫精確匹配
         for spec in DOMAIN_KNOWLEDGE_SPECS:
             # 檢查作者條件（若有指定）
@@ -485,7 +505,7 @@ class AgenticAnalyzer:
                     "likes": post.get("likes", 0),
                     "summary": spec["summary"],
                     "core_thesis": spec["core_thesis"],
-                    "links": links if links else [{"name": "原始貼文", "url": "#", "type": "post"}],
+                    "links": all_links,
                     "community_views": {
                         "pro": spec["pro"],
                         "con": spec["con"]
@@ -548,7 +568,7 @@ class AgenticAnalyzer:
             "likes": post.get("likes", 0),
             "summary": summary,
             "core_thesis": core_thesis,
-            "links": links if links else [{"name": "原始貼文", "url": "#", "type": "post"}],
+            "links": all_links,
             "community_views": {
                 "pro": pro_v,
                 "con": con_v
