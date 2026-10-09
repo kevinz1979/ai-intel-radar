@@ -181,17 +181,26 @@ def save_intel_report(report_data: dict) -> int:
 def get_all_intel_reports(limit: int = 50) -> List[Dict[str, Any]]:
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM intel_reports ORDER BY id DESC LIMIT ?", (limit,))
+    cursor.execute("SELECT * FROM intel_reports ORDER BY id DESC LIMIT ?", (limit * 2,))
     rows = cursor.fetchall()
     conn.close()
     
     results = []
+    seen_titles = set()
     for r in rows:
         d = dict(r)
+        # 標題去重，避免重複巡邏抓取造成相同卡片洗版
+        title_key = d["title"].strip()
+        if title_key in seen_titles:
+            continue
+        seen_titles.add(title_key)
+        
         d["links"] = json.loads(d["links_json"]) if d["links_json"] else []
         d["communityViews"] = json.loads(d["community_views_json"]) if d["community_views_json"] else {}
         d["arbitrage"] = json.loads(d["arbitrage_json"]) if d["arbitrage_json"] else {}
         results.append(d)
+        if len(results) >= limit:
+            break
     return results
 
 def get_roster_summary() -> List[Dict[str, Any]]:
