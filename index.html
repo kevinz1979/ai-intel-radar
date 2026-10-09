@@ -1558,10 +1558,78 @@
           <div class="text-xs font-bold text-indigo-400 mb-1">🎯 第四層：情報轉化建議 (So What?)</div>
           <p class="text-xs text-[var(--foreground)] font-medium">${item.actionable}</p>
         </div>
+
+        <!-- 商業投資寫作草稿生成區 (MVP) -->
+        <div class="bg-[#18181b] border border-emerald-500/30 rounded-xl p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
+              <span>✍️ 商業投資寫作草稿 (MVP)</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">台灣市場導向</span>
+            </div>
+            <button onclick="copyDraftContent()" id="copy-draft-btn" class="px-2.5 py-1 text-[11px] font-semibold rounded bg-emerald-500 hover:bg-emerald-600 text-black transition flex items-center gap-1">
+              <span>📋 一鍵複製草稿</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-[var(--muted-foreground)] leading-relaxed">
+            專為 Threads 繁中受眾設計：以「商業變現、單位成本 ROI、產業受惠/淘汰鏈」為切入點，保留人工決策空間。
+          </p>
+          <div class="relative">
+            <textarea id="draft-textarea" readonly rows="8" class="w-full text-xs font-mono bg-[#121215] text-zinc-300 p-3 rounded-lg border border-[#27272a] focus:outline-none resize-none leading-relaxed selection:bg-indigo-500 selection:text-white"></textarea>
+          </div>
+          <div class="text-[10px] text-zinc-500 flex items-center justify-between">
+            <span>💡 提示：點擊複製後，可加入個人口吻或實際案例後發布</span>
+            <span id="copy-toast" class="text-emerald-400 font-bold opacity-0 transition-opacity">已複製到剪貼簿！</span>
+          </div>
+        </div>
       `;
+
+      // 填充寫作草稿
+      setTimeout(() => {
+        const textarea = document.getElementById("draft-textarea");
+        if (textarea) {
+          textarea.value = generateThreadDraft(item);
+        }
+      }, 30);
 
       backdrop.classList.remove("hidden");
       drawer.classList.remove("translate-x-full");
+    }
+
+    function generateThreadDraft(item) {
+      const authorName = item.author_role || item.author;
+      return `【${item.author} 這篇情報，藏著值得留意的商業與投資信號】
+
+最近 ${authorName} 分享了一個關鍵動態：
+👉 ${item.summary}
+
+很多人的第一反應是「又有酷炫新技術了」，但如果從「投資與商業變現」視角來看，這件事的底層邏輯是：
+📌 ${item.core_thesis}
+
+市場目前的分歧點非常值得玩味：
+✅ 樂觀派看到的是商機：${item.communityViews?.pro || '大幅提升原型交付與生產力'}
+⚠️ 但保守派也點出了硬傷：${item.communityViews?.con || '潛在的架構複雜度與維護成本'}
+
+💡 給實務決策者與創作者的 So What：
+${item.actionable}
+
+資訊每天都在指數級爆炸，真正值錢的不是盲目追逐新名詞，而是看懂「誰會因此受惠、誰會因此被淘汰、以及回本週期到底多久」。
+
+大家怎麼看這個趨勢？你會考慮在個人流程或團隊中導入嗎？歡迎交流 👇`;
+    }
+
+    function copyDraftContent() {
+      const textarea = document.getElementById("draft-textarea");
+      if (!textarea) return;
+      textarea.select();
+      navigator.clipboard.writeText(textarea.value).then(() => {
+        const toast = document.getElementById("copy-toast");
+        if (toast) {
+          toast.classList.remove("opacity-0");
+          setTimeout(() => toast.classList.add("opacity-0"), 2000);
+        }
+      }).catch(() => {
+        alert("草稿已選取，請按 Ctrl+C 複製！");
+      });
     }
 
     function closeDrawer() {
