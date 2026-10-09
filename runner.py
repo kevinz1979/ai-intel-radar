@@ -13,7 +13,8 @@ from storage import (
     mark_post_processed,
     save_intel_report,
     get_all_intel_reports,
-    get_roster_summary
+    get_roster_summary,
+    get_connection
 )
 from analyzer import AgenticAnalyzer
 from poller import RealSocialPoller
@@ -86,15 +87,40 @@ def run_patrol_cycle():
     rebalance_rep = run_0050_kol_rebalance()
     print(f"⚖️ [0050 治理] 成分股檢核完畢：正選 X {rebalance_rep['active_x']} 席 / Threads {rebalance_rep['active_threads']} 席")
 
-    # 2. 執行真實雙軌巡邏
+    # 2. 執行真實雙軌巡邏（採用 Round-Robin 輪替機制，動態輪巡 100 席種子）
     poller = RealSocialPoller()
     print("📡 [Poller] 開始對 X 與 Threads 種子進行真實即時掃描...", flush=True)
+
+    conn = get_connection()
+    c = conn.cursor()
+    # 優先挑選最久未巡邏的 8 位 X 正選種子
+    c.execute("""
+    SELECT handle FROM seeds 
+    WHERE platform = 'X' AND status = '正選' 
+    ORDER BY CASE WHEN priority = 'P0' THEN 0 ELSE 1 END, last_polled_at ASC 
+    LIMIT 8
+    """)
+    x_seeds = [r[0] for r in c.fetchall()]
+
+    # 優先挑選最久未巡邏的 4 位 Threads 正選種子
+    c.execute("""
+    SELECT handle FROM seeds 
+    WHERE platform = 'Threads' AND status = '正選' 
+    ORDER BY CASE WHEN priority = 'P0' THEN 0 ELSE 1 END, last_polled_at ASC 
+    LIMIT 4
+    """)
+    th_seeds = [r[0] for r in c.fetchall()]
+    conn.close()
+
+    print(f"🎯 本輪巡查名單: X({len(x_seeds)}) {', '.join(x_seeds[:4])}... | Threads({len(th_seeds)}) {', '.join(th_seeds[:3])}...")
+
     # 巡邏 X 核心 KOL
-    for handle in ["@karpathy", "@swyx", "@simonw"]:
+    for handle in x_seeds:
         poller.poll_x_user(handle)
         time.sleep(1)
+        
     # 巡邏 Threads 核心 KOL
-    for handle in ["@ihower"]:
+    for handle in th_seeds:
         poller.poll_threads_user(handle)
         time.sleep(1)
 
