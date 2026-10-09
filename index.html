@@ -6,6 +6,18 @@
   <title>AI 社群情報雷達 | X & Threads 雙軌巡邏儀控表</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
+    :root {
+      --background: #09090b;
+      --foreground: #f4f4f5;
+      --card: #18181b;
+      --card-foreground: #f4f4f5;
+      --border: #27272a;
+      --muted: #27272a;
+      --muted-foreground: #a1a1aa;
+      --surface-container-low: #121215;
+      --primary: #6366f1;
+      --primary-foreground: #ffffff;
+    }
     /* 滾動條美化 */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -162,9 +174,9 @@
   </div>
 
   <!-- 層層下鑽抽屜 (Deep-Dive Drawer & Backdrop) -->
-  <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 hidden transition-opacity duration-200"></div>
+  <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden transition-opacity duration-200"></div>
 
-  <div id="detail-drawer" class="fixed top-0 right-0 h-full w-full max-w-xl bg-[var(--card)] border-l border-[var(--border)] z-50 shadow-2xl p-6 overflow-y-auto transform translate-x-full drawer-slide">
+  <div id="detail-drawer" class="fixed top-0 right-0 h-full w-full max-w-xl border-l border-[#27272a] z-50 shadow-2xl p-6 overflow-y-auto transform translate-x-full drawer-slide" style="background-color: #18181b !important; color: #f4f4f5 !important;">
     <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-5">
       <div class="flex items-center gap-2" id="drawer-header-badges">
         <!-- 動態徽章 -->
@@ -1289,7 +1301,7 @@
         </div>
 
         <!-- 30 秒核心事實 -->
-        <div class="bg-[var(--surface-container-low)] border border-[var(--border)] rounded-xl p-4">
+        <div class="bg-[#121215] border border-[#27272a] rounded-xl p-4">
           <div class="flex items-center gap-1.5 text-xs font-bold text-indigo-400 mb-1.5">
             <span>💡</span> 第一層：30 秒速讀摘要
           </div>
@@ -1297,7 +1309,7 @@
         </div>
 
         <!-- 技術本質 (Core Thesis) -->
-        <div class="bg-[var(--surface-container-low)] border border-[var(--border)] rounded-xl p-4">
+        <div class="bg-[#121215] border border-[#27272a] rounded-xl p-4">
           <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-400 mb-1.5">
             <span>⚙️</span> 第二層：核心技術架構解析
           </div>
@@ -1324,7 +1336,7 @@
           <div class="text-xs font-bold text-[var(--foreground)]">🔗 驗證連結與原始資產</div>
           <div class="space-y-1.5">
             ${links.map(l => `
-              <a href="${l.url}" target="_blank" class="flex items-center justify-between p-2.5 rounded-lg bg-[var(--surface-container-low)] border border-[var(--border)] hover:border-indigo-500 text-xs text-indigo-400 transition">
+              <a href="${l.url}" target="_blank" class="flex items-center justify-between p-2.5 rounded-lg bg-[#121215] border border-[#27272a] hover:border-indigo-500 text-xs text-indigo-400 transition">
                 <span>${l.name}</span>
                 <span class="text-[var(--muted-foreground)]">↗</span>
               </a>
