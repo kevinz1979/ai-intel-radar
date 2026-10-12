@@ -238,56 +238,22 @@
     // 模擬情報數據庫
     const INTEL_DATA = [
   {
-    "id": 5,
-    "raw_post_id": 5,
-    "title": "【工程評測】ihower 精煉 Hamel Husain 演講核心：AI 產品落地的 Evals 錯誤分析實務",
-    "platform": "Threads",
-    "author": "@ihower",
-    "author_role": "ihower",
-    "urgency": "P1",
-    "timestamp_str": "剛剛",
-    "likes": 150,
-    "summary": "ihower 深入剖析前 GitHub 機器學習工程師 Hamel Husain 的 AI 產品工程演講，聚焦如何建立可量化、可追蹤的 Evals（評估體系）以及針對失敗案例做結構化錯誤歸因。",
-    "core_thesis": "「沒有評估就沒有優化」。傳統軟體依賴單元測試斷言，但 LLM 具備不確定性，必須採用分級基準集（Golden Dataset）與基於具體邊界條件的錯誤分群 (Error Taxonomy)。",
-    "links_json": "[{\"name\": \"原始貼文 (Threads @ihower)\", \"url\": \"https://www.threads.net/@ihower\", \"type\": \"post\"}]",
-    "community_views_json": "{\"pro\": \"終結依賴人工隨機 Prompt 試錯的黑箱開發，讓 Prompt 調優與微調有明確的指標（Accuracy, Recall, Cost, Latency）作為迭代依據。\", \"con\": \"建立高品質 Golden Dataset 需耗費大量領域專家時間成本，且 LLM-as-a-judge 本身亦存在評分偏見 (Position & Verbosity Bias)。\"}",
-    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"2 小時\", \"threadsStatus\": \"在地工程團隊對 Evals 概念逐漸重視，這篇整理切中實務痛點。\"}",
-    "actionable": "在產品進入下一階段前，立刻從生產日誌中收集 50~100 筆典型失敗對話，手動標註建立團隊的第一份 Golden Test Suite。",
-    "created_at": "2026-10-12T11:11:56.042142",
-    "links": [
-      {
-        "name": "原始貼文 (Threads @ihower)",
-        "url": "https://www.threads.net/@ihower",
-        "type": "post"
-      }
-    ],
-    "communityViews": {
-      "pro": "終結依賴人工隨機 Prompt 試錯的黑箱開發，讓 Prompt 調優與微調有明確的指標（Accuracy, Recall, Cost, Latency）作為迭代依據。",
-      "con": "建立高品質 Golden Dataset 需耗費大量領域專家時間成本，且 LLM-as-a-judge 本身亦存在評分偏見 (Position & Verbosity Bias)。"
-    },
-    "arbitrage": {
-      "hasTimeGap": false,
-      "gapHours": "2 小時",
-      "threadsStatus": "在地工程團隊對 Evals 概念逐漸重視，這篇整理切中實務痛點。"
-    }
-  },
-  {
     "id": 4,
-    "raw_post_id": 4,
-    "title": "【架構選型】ihower 梳理 AI 搜尋前沿技術地圖：優先投入 vs 先知道就好的關鍵邊界",
+    "raw_post_id": 5,
+    "title": "【GPU】 ihower：入門導讀: AI 晶片架構，GPU、TPU、Cerebras、Groq 各自怎麼解決搬資料...",
     "platform": "Threads",
     "author": "@ihower",
     "author_role": "ihower",
     "urgency": "P1",
     "timestamp_str": "剛剛",
     "likes": 150,
-    "summary": "ihower 整理 AI Search 最新前沿技術光譜，針對向量檢索、重排序 (Reranking)、混合檢索 (Hybrid Search) 與代理檢索 (Agentic Retrieval) 進行工程 ROI 分級評估。",
-    "core_thesis": "從「單純 Embedding 語意比對」轉向「多階段漏斗式精準召回」。純向量搜尋在關鍵字精準度與數值過濾上存在結構性缺陷，生產級 AI 搜尋必須結合 BM25、倒排索引與交叉編碼器 (Cross-Encoder)。",
+    "summary": "ihower 針對當前技術實踐指出：入門導讀: AI 晶片架構，GPU、TPU、Cerebras、Groq 各自怎麼解決搬資料的問題。其核心觀察點聚焦於「入門導讀: AI 晶片架構，GPU、TPU、Cerebras、Groq 各自怎麼解決搬資料的問題」。",
+    "core_thesis": "底層涉及硬體運算頻寬與顯存吞吐之權衡。重點在於如何於有限的記憶體架構下，透過量化或直接匯流排協議最大化推論吞吐。",
     "links_json": "[{\"name\": \"原始貼文 (Threads @ihower)\", \"url\": \"https://www.threads.net/@ihower\", \"type\": \"post\"}]",
-    "community_views_json": "{\"pro\": \"釐清工程資源配置優先級，避免團隊盲目跟風最新複雜架構，聚焦高性價比的檢索改進點（如優化 Chunking 與 Rerank）。\", \"con\": \"高級代理搜尋（如自我反思式檢索與多輪查詢改寫）延遲偏高，在對回應時間要求苛刻的即時業務場景中難以直接落地。\"}",
-    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中軟體工程師熱烈轉載，普遍認同先做好混合檢索比盲目堆疊 Agent 更務實。\"}",
-    "actionable": "盤點內部 RAG 系統，先落實「BM25 + 語意向量混合檢索」並加上 Cohere/BGE Reranker，暫緩過度複雜的遞迴 Agentic 檢索。",
-    "created_at": "2026-10-12T11:11:56.040212",
+    "community_views_json": "{\"pro\": \"顯著壓低單次推論的邊際硬體成本，賦能端側與邊緣運算節點獨立部署。\", \"con\": \"需承擔散熱、訊號衰減及特定驅動相容性的物理維護成本。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中在地即時共鳴討論。\"}",
+    "actionable": "建議先於本地小型環境壓測延遲與顯存曲線，評估硬體升級之實際性價比。",
+    "created_at": "2026-10-12T20:22:47.468019",
     "links": [
       {
         "name": "原始貼文 (Threads @ihower)",
@@ -296,32 +262,32 @@
       }
     ],
     "communityViews": {
-      "pro": "釐清工程資源配置優先級，避免團隊盲目跟風最新複雜架構，聚焦高性價比的檢索改進點（如優化 Chunking 與 Rerank）。",
-      "con": "高級代理搜尋（如自我反思式檢索與多輪查詢改寫）延遲偏高，在對回應時間要求苛刻的即時業務場景中難以直接落地。"
+      "pro": "顯著壓低單次推論的邊際硬體成本，賦能端側與邊緣運算節點獨立部署。",
+      "con": "需承擔散熱、訊號衰減及特定驅動相容性的物理維護成本。"
     },
     "arbitrage": {
       "hasTimeGap": false,
       "gapHours": "0 小時",
-      "threadsStatus": "繁中軟體工程師熱烈轉載，普遍認同先做好混合檢索比盲目堆疊 Agent 更務實。"
+      "threadsStatus": "繁中在地即時共鳴討論。"
     }
   },
   {
-    "id": 2,
-    "raw_post_id": 2,
-    "title": "【硬體實測】ihower 實測 Framework 迷你主機：透過 OCuLink 外接 RTX 5070 Ti 打造地端 AI 工作站",
+    "id": 3,
+    "raw_post_id": 4,
+    "title": "【Agent】 ihower：Token 怎麼再便宜 1000 倍...",
     "platform": "Threads",
     "author": "@ihower",
     "author_role": "ihower",
-    "urgency": "P1",
+    "urgency": "P2",
     "timestamp_str": "剛剛",
     "likes": 150,
-    "summary": "台灣資深技術顧問 ihower 實測使用 OCuLink 高速介面，為模組化 Framework Desktop 電腦外接 NVIDIA RTX 5070 Ti 顯卡，驗證本地端小型 AI 模型推論與搜尋前沿技術的落地表現。",
-    "core_thesis": "解決迷你主機無內建高階獨顯的推論瓶頸。OCuLink 採用 PCIe 4.0 x4 直連協議，實體頻寬達 64 Gbps，遠勝 USB4 / Thunderbolt 4 的 40 Gbps 限制且無封裝延遲，顯卡頻寬損耗降至 5%~10% 以內。",
+    "summary": "ihower 針對當前技術實踐指出：Token 怎麼再便宜 1000 倍。其核心觀察點聚焦於「前 NVIDIA 工程師的答案: 放掉低延遲，專做背景 Agent 的推論」。",
+    "core_thesis": "探討 AI 代理在生產環境之確定性控制邊界。LLM 雖具備靈活推論，但必須藉由架構約束、型別系統與基準評估確保輸出一致性。",
     "links_json": "[{\"name\": \"原始貼文 (Threads @ihower)\", \"url\": \"https://www.threads.net/@ihower\", \"type\": \"post\"}]",
-    "community_views_json": "{\"pro\": \"兼具迷你主機的安靜省電與高階 GPU 的推論爆發力，適合個人工作室與獨立開發者以有限預算配置地端 8B/14B 模型專屬推論節點。\", \"con\": \"外接線材訊號完整性要求高（線長通常限制在 50cm 內）、無熱插拔保護，且獨立顯卡外置需額外配置電源供應器與散熱空間。\"}",
-    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"在地創作者發起的第一手實測，繁中硬體與開源圈討論度極高。\"}",
-    "actionable": "若有本地部署輕量 AI 需求，評估現有迷你主機是否支援 M.2 轉 OCuLink 擴充，作為高性價比地端推論方案。",
-    "created_at": "2026-10-12T11:11:56.035819",
+    "community_views_json": "{\"pro\": \"將工程師從重複性編碼工作中徹底解放，單人即可獨立推進複雜模組原型。\", \"con\": \"隨著上下文跨度與依賴增加，潛在的隱性幻覺與架構退化風險呈指數級攀升。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中在地即時共鳴討論。\"}",
+    "actionable": "建立自動化回歸評估集 (Evals)，在交由 Agent 執行前先明確定義模組介面契約。",
+    "created_at": "2026-10-12T20:22:47.466132",
     "links": [
       {
         "name": "原始貼文 (Threads @ihower)",
@@ -330,13 +296,47 @@
       }
     ],
     "communityViews": {
-      "pro": "兼具迷你主機的安靜省電與高階 GPU 的推論爆發力，適合個人工作室與獨立開發者以有限預算配置地端 8B/14B 模型專屬推論節點。",
-      "con": "外接線材訊號完整性要求高（線長通常限制在 50cm 內）、無熱插拔保護，且獨立顯卡外置需額外配置電源供應器與散熱空間。"
+      "pro": "將工程師從重複性編碼工作中徹底解放，單人即可獨立推進複雜模組原型。",
+      "con": "隨著上下文跨度與依賴增加，潛在的隱性幻覺與架構退化風險呈指數級攀升。"
     },
     "arbitrage": {
       "hasTimeGap": false,
       "gapHours": "0 小時",
-      "threadsStatus": "在地創作者發起的第一手實測，繁中硬體與開源圈討論度極高。"
+      "threadsStatus": "繁中在地即時共鳴討論。"
+    }
+  },
+  {
+    "id": 1,
+    "raw_post_id": 1,
+    "title": "【前沿洞察】 ihower：整理了兩篇 AI 推論的文章...",
+    "platform": "Threads",
+    "author": "@ihower",
+    "author_role": "ihower",
+    "urgency": "P1",
+    "timestamp_str": "剛剛",
+    "likes": 150,
+    "summary": "ihower 針對當前技術實踐指出：整理了兩篇 AI 推論的文章。其核心觀察點聚焦於「對 AI 晶片硬體架構不太熟，沒想到有人在研究:」。",
+    "core_thesis": "探討現有工作流被生成式技術重塑之本質演進。核心在於如何將高熵的非結構化人類意圖轉化為高可靠之結構化交付物。",
+    "links_json": "[{\"name\": \"原始貼文 (Threads @ihower)\", \"url\": \"https://www.threads.net/@ihower\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅縮短知識探索與跨格式資訊重構之摩擦力，提升決策敏捷度。\", \"con\": \"需防範過度依賴抽象層帶來的認知黑箱，維持對底層運作原理的把控。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中在地即時共鳴討論。\"}",
+    "actionable": "關注相關技術在 GitHub 上的最新提交動態，於沙盒環境執行最小可行性驗證 (MVP)。",
+    "created_at": "2026-10-12T20:22:47.461156",
+    "links": [
+      {
+        "name": "原始貼文 (Threads @ihower)",
+        "url": "https://www.threads.net/@ihower",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅縮短知識探索與跨格式資訊重構之摩擦力，提升決策敏捷度。",
+      "con": "需防範過度依賴抽象層帶來的認知黑箱，維持對底層運作原理的把控。"
+    },
+    "arbitrage": {
+      "hasTimeGap": false,
+      "gapHours": "0 小時",
+      "threadsStatus": "繁中在地即時共鳴討論。"
     }
   }
 ];
@@ -1409,7 +1409,7 @@
     "name": "ihower 葉平",
     "role": "在地工程實務與架構",
     "priority": "P0",
-    "lastCheck": "2026-10-12 11:11",
+    "lastCheck": "2026-10-12 20:22",
     "count": 5,
     "status": "正常"
   },
@@ -1419,7 +1419,7 @@
     "name": "Kenzo 自動化顧問",
     "role": "在地工程實務與架構",
     "priority": "P0",
-    "lastCheck": "2026-10-12 11:11",
+    "lastCheck": "2026-10-12 20:22",
     "count": 1,
     "status": "正常"
   },
@@ -1429,7 +1429,7 @@
     "name": "Will 保哥",
     "role": "在地工程實務與架構",
     "priority": "P0",
-    "lastCheck": "2026-10-12 11:11",
+    "lastCheck": "2026-10-12 20:22",
     "count": 1,
     "status": "正常"
   },
@@ -1439,7 +1439,7 @@
     "name": "Gipi 游舒帆",
     "role": "在地工程實務與架構",
     "priority": "P1",
-    "lastCheck": "2026-10-12 11:11",
+    "lastCheck": "2026-10-12 20:22",
     "count": 1,
     "status": "正常"
   }
