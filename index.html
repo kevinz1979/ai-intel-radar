@@ -236,7 +236,76 @@
 
   <script>
     // 模擬情報數據庫
-    const INTEL_DATA = [];
+    const INTEL_DATA = [
+  {
+    "id": 2,
+    "raw_post_id": 5,
+    "title": "【前沿洞察】 ihower：▸ 從搜尋到決策： Decision Model 如何幫助 AI 判斷哪些資訊值得採用？...",
+    "platform": "Threads",
+    "author": "@ihower",
+    "author_role": "ihower",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 150,
+    "summary": "ihower 針對當前技術實踐指出：▸ 從搜尋到決策： Decision Model 如何幫助 AI 判斷哪些資訊值得採用？。其核心觀察點聚焦於「▸ 從搜尋到決策： Decision Model 如何幫助 AI 判斷哪些資訊值得採用？」。",
+    "core_thesis": "探討現有工作流被生成式技術重塑之本質演進。核心在於如何將高熵的非結構化人類意圖轉化為高可靠之結構化交付物。",
+    "links_json": "[{\"name\": \"原始貼文 (Threads @ihower)\", \"url\": \"https://www.threads.net/@ihower\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅縮短知識探索與跨格式資訊重構之摩擦力，提升決策敏捷度。\", \"con\": \"需防範過度依賴抽象層帶來的認知黑箱，維持對底層運作原理的把控。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中在地即時共鳴討論。\"}",
+    "actionable": "關注相關技術在 GitHub 上的最新提交動態，於沙盒環境執行最小可行性驗證 (MVP)。",
+    "created_at": "2026-11-23T13:52:47.504970",
+    "links": [
+      {
+        "name": "原始貼文 (Threads @ihower)",
+        "url": "https://www.threads.net/@ihower",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅縮短知識探索與跨格式資訊重構之摩擦力，提升決策敏捷度。",
+      "con": "需防範過度依賴抽象層帶來的認知黑箱，維持對底層運作原理的把控。"
+    },
+    "arbitrage": {
+      "hasTimeGap": false,
+      "gapHours": "0 小時",
+      "threadsStatus": "繁中在地即時共鳴討論。"
+    }
+  },
+  {
+    "id": 1,
+    "raw_post_id": 2,
+    "title": "【前沿洞察】 ihower：再到新興的 Decision Model，帶你深入理解現代 AI 搜尋系統的核心技術，以及...",
+    "platform": "Threads",
+    "author": "@ihower",
+    "author_role": "ihower",
+    "urgency": "P2",
+    "timestamp_str": "剛剛",
+    "likes": 150,
+    "summary": "ihower 針對當前技術實踐指出：再到新興的 Decision Model，帶你深入理解現代 AI 搜尋系統的核心技術，以及如何透過多階段檢索與排序。其核心觀察點聚焦於「再到新興的 Decision Model，帶你深入理解現代 AI 搜尋系統的核心技術，以及如何透過多階段檢索與排序」。",
+    "core_thesis": "探討現有工作流被生成式技術重塑之本質演進。核心在於如何將高熵的非結構化人類意圖轉化為高可靠之結構化交付物。",
+    "links_json": "[{\"name\": \"原始貼文 (Threads @ihower)\", \"url\": \"https://www.threads.net/@ihower\", \"type\": \"post\"}]",
+    "community_views_json": "{\"pro\": \"大幅縮短知識探索與跨格式資訊重構之摩擦力，提升決策敏捷度。\", \"con\": \"需防範過度依賴抽象層帶來的認知黑箱，維持對底層運作原理的把控。\"}",
+    "arbitrage_json": "{\"hasTimeGap\": false, \"gapHours\": \"0 小時\", \"threadsStatus\": \"繁中在地即時共鳴討論。\"}",
+    "actionable": "關注相關技術在 GitHub 上的最新提交動態，於沙盒環境執行最小可行性驗證 (MVP)。",
+    "created_at": "2026-11-23T13:52:47.500543",
+    "links": [
+      {
+        "name": "原始貼文 (Threads @ihower)",
+        "url": "https://www.threads.net/@ihower",
+        "type": "post"
+      }
+    ],
+    "communityViews": {
+      "pro": "大幅縮短知識探索與跨格式資訊重構之摩擦力，提升決策敏捷度。",
+      "con": "需防範過度依賴抽象層帶來的認知黑箱，維持對底層運作原理的把控。"
+    },
+    "arbitrage": {
+      "hasTimeGap": false,
+      "gapHours": "0 小時",
+      "threadsStatus": "繁中在地即時共鳴討論。"
+    }
+  }
+];
 
     // KOL 巡邏種子庫數據
     const ROSTER_DATA = [
@@ -395,36 +464,6 @@
     "handle": "@paulg",
     "name": "Paul Graham",
     "role": "商業變現與硬體算力",
-    "priority": "P0",
-    "lastCheck": "待輪詢",
-    "count": 0,
-    "status": "正選"
-  },
-  {
-    "platform": "Threads",
-    "handle": "@ihower",
-    "name": "ihower 葉平",
-    "role": "在地工程實務與架構",
-    "priority": "P0",
-    "lastCheck": "待輪詢",
-    "count": 0,
-    "status": "正選"
-  },
-  {
-    "platform": "Threads",
-    "handle": "@ai_builder_tw",
-    "name": "Kenzo 自動化顧問",
-    "role": "在地工程實務與架構",
-    "priority": "P0",
-    "lastCheck": "待輪詢",
-    "count": 0,
-    "status": "正選"
-  },
-  {
-    "platform": "Threads",
-    "handle": "@will_huang",
-    "name": "Will 保哥",
-    "role": "在地工程實務與架構",
     "priority": "P0",
     "lastCheck": "待輪詢",
     "count": 0,
@@ -705,16 +744,6 @@
     "handle": "@chamath",
     "name": "Chamath Palihapitiya",
     "role": "商業變現與硬體算力",
-    "priority": "P1",
-    "lastCheck": "待輪詢",
-    "count": 0,
-    "status": "正選"
-  },
-  {
-    "platform": "Threads",
-    "handle": "@gipi_chen",
-    "name": "Gipi 游舒帆",
-    "role": "在地工程實務與架構",
     "priority": "P1",
     "lastCheck": "待輪詢",
     "count": 0,
@@ -1339,6 +1368,46 @@
     "lastCheck": "待輪詢",
     "count": 0,
     "status": "觀察候補"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ihower",
+    "name": "ihower 葉平",
+    "role": "在地工程實務與架構",
+    "priority": "P0",
+    "lastCheck": "2026-11-23 13:52",
+    "count": 5,
+    "status": "正常"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@ai_builder_tw",
+    "name": "Kenzo 自動化顧問",
+    "role": "在地工程實務與架構",
+    "priority": "P0",
+    "lastCheck": "2026-11-23 13:52",
+    "count": 1,
+    "status": "正常"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@will_huang",
+    "name": "Will 保哥",
+    "role": "在地工程實務與架構",
+    "priority": "P0",
+    "lastCheck": "2026-11-23 13:52",
+    "count": 1,
+    "status": "正常"
+  },
+  {
+    "platform": "Threads",
+    "handle": "@gipi_chen",
+    "name": "Gipi 游舒帆",
+    "role": "在地工程實務與架構",
+    "priority": "P1",
+    "lastCheck": "2026-11-23 13:52",
+    "count": 1,
+    "status": "正常"
   }
 ];
 
